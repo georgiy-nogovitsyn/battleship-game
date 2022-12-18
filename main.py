@@ -6,8 +6,9 @@ engg_cell_symbol = '*'
 user1_ships_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
 user1_battle_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
 decks_quantity = {'4': 1, '3': 2, '2': 3, '1': 4}
+coordinates_dict = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9}
 
-# that function draws two field
+# that function draws two fields
 def fields_draw(ships_field, battle_field):
     print('   A B C D E F G H I J\t\t   A B C D E F G H I J')
     for x in range(0, 10):
@@ -20,7 +21,8 @@ def fields_draw(ships_field, battle_field):
             print(ch, end=' ')
         print()
 
-# that function places ships on the field
+
+# that function places ships on the field properly
 def ship_placement(ships_field, decks_num, orien, y_coord, x_coord):
     global ship_symbol
     global engg_cell_symbol
@@ -136,6 +138,7 @@ def ship_placement(ships_field, decks_num, orien, y_coord, x_coord):
         pass
     return ship_placement_status
 
+
 # that function validates ships placement (checks if cell is already taken and if ship goes out of the field borders)
 def coords_validation(ships_field, decks_num, orien, y_coord, x_coord):
     validation_result = False
@@ -144,9 +147,10 @@ def coords_validation(ships_field, decks_num, orien, y_coord, x_coord):
     msg = ''
     if orien == 0:
         if (x_coord + decks_num - 1) <= 9:
-            if ship_symbol not in ships_field[y_coord][x_coord:x_coord + decks_num] and engg_cell_symbol not in ships_field[
-                                                                                                               y_coord][
-                                                                                                           x_coord:x_coord + decks_num]:
+            if ship_symbol not in ships_field[y_coord][x_coord:x_coord + decks_num] and engg_cell_symbol not in \
+                    ships_field[
+                        y_coord][
+                    x_coord:x_coord + decks_num]:
                 validation_result = True
             else:
                 msg = 'That cell is already taken by another ship'
@@ -164,6 +168,7 @@ def coords_validation(ships_field, decks_num, orien, y_coord, x_coord):
         else:
             msg = 'The ship goes out of the field\'s border'
     return validation_result
+
 
 # that function randomly places ships on the ships field. it's kinda working, 'cause i'm not sure in that
 def random_ship_placement(ships_field):
@@ -184,10 +189,49 @@ def random_ship_placement(ships_field):
     print(decks_quantity)
 
 
-#test stuff
+def manual_ship_placement(ships_field):
+    decks_quantity = {'4': 1, '3': 2, '2': 3, '1': 4}
+
+    def manual_func(): # ?
+        while sum(list(decks_quantity.values())) > 0:
+            while True:
+                try:
+                    print(decks_quantity)
+                    decks_num = int(input('Choose decks number (1-4): '))
+                    if decks_num in [1, 2, 3, 4]:
+                        if decks_quantity[str(decks_num)] > 0:
+                            decks_quantity[str(decks_num)] - 1
+                            break
+                        else:
+                            print('You don\'t have decks of that quantity.')
+                            print(decks_quantity)
+                    else:
+                        print('Only integers from 1 to 4.')
+                except ValueError:
+                    print('Only integers from 1 to 4.')
+                try:
+                    orien = int(input('Choose orientation of the ship: 0 for horizontal, 1 for vertical: '))
+                    if orien in [0, 1]:
+                        break
+                    else:
+                        print('Only 0 and 1 integers allow')
+                except ValueError:
+                    print('Only 0 and 1 integers allow.')
+            while True:
+                try:
+                    input('Choose coordinates: A-J for columns and 0-9 for rows (e.g. B5): ')
+
+                    if x_coord in [num for num in range(0, 10)]:
+                        break
+                    else:
+                        print('Only 0 and 1 integers allow')
+                except ValueError:
+                    print('Only 0 and 1 integers allow.')
+
+
+# test stuff
 random_ship_placement(user1_ships_field)
 random_ship_placement(user1_battle_field)
-
 
 fields_draw(user1_ships_field, user1_battle_field)
 for x in user1_ships_field:
