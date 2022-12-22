@@ -2,9 +2,13 @@ import random
 
 field_cell = '□'
 ship_symbol = 'S'
+damaged_ship_symbol = 'D'
 engg_cell_symbol = '*'
 user1_ships_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
 user1_battle_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
+computer_ships_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
+computer_battle_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
+
 decks_quantity = {'4': 1, '3': 2, '2': 3, '1': 4}
 coordinates_dict = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9}
 
@@ -21,6 +25,13 @@ def fields_draw(ships_field, battle_field):
         for ch in battle_field[x]:
             print(ch, end=' ')
         print()
+
+
+def field_cleaner(ships_field):
+    for counter, x in enumerate(ships_field):
+        for y in x:
+            if y == engg_cell_symbol:
+                x[counter] = field_cell
 
 
 # that function places ships on the field properly
@@ -172,7 +183,7 @@ def coords_validation(ships_field, decks_num, orien, y_coord, x_coord):
 
 
 # that function randomly places ships on the ships field. it's kinda working, 'cause i'm not sure in that
-def random_ship_placement(ships_field):
+def random_ship_placement(ships_field, battle_field):
     decks_quantity = {'4': 1, '3': 2, '2': 3, '1': 4}
     while sum(decks_quantity.values()) > 0:
         decks_num = random.choice(list(decks_quantity.keys()))
@@ -187,10 +198,33 @@ def random_ship_placement(ships_field):
             x_coord = random.randrange(0, 10)
         ship_placement(ships_field, int(decks_num), orien, y_coord, x_coord)
         decks_quantity[decks_num] -= 1
-    print(decks_quantity)
+
+    fields_draw(ships_field, battle_field)
+
+    approve = input('Do you wanna change placement?\ty/n\n')
+    if approve != 'n':
+        ships_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
+        random_ship_placement(ships_field, battle_field)
 
 
-def manual_ship_placement(ships_field):
+def random_ship_placement_computer(ships_field):
+    decks_quantity = {'4': 1, '3': 2, '2': 3, '1': 4}
+    while sum(decks_quantity.values()) > 0:
+        decks_num = random.choice(list(decks_quantity.keys()))
+        while decks_quantity[decks_num] <= 0:
+            decks_num = random.choice(list(decks_quantity.keys()))
+        orien = random.randrange(0, 2)
+        y_coord = random.randrange(0, 10)
+        x_coord = random.randrange(0, 10)
+        while not coords_validation(ships_field, int(decks_num), orien, y_coord, x_coord):
+            orien = random.randrange(0, 2)
+            y_coord = random.randrange(0, 10)
+            x_coord = random.randrange(0, 10)
+        ship_placement(ships_field, int(decks_num), orien, y_coord, x_coord)
+        decks_quantity[decks_num] -= 1
+
+
+def manual_ship_placement(ships_field, battle_field):
     decks_quantity = {'4': 1, '3': 2, '2': 3, '1': 4}
 
     while sum(list(decks_quantity.values())) > 0:
@@ -229,7 +263,7 @@ def manual_ship_placement(ships_field):
                     x_coord = x_coord_dict[x_coord]
                     if coords_validation(ships_field, decks_num, orien, y_coord, x_coord) == True:
                         ship_placement(ships_field, decks_num, orien, y_coord, x_coord)
-                        break
+                        quit()
                     else:
                         print('You can\'t place here, probably there\'s another ship already placed')
 
@@ -240,23 +274,63 @@ def manual_ship_placement(ships_field):
                 print('Only 0 and 1 integers allow.')
 
 
-# # test stuff
-# random_ship_placement(user1_ships_field)
-# random_ship_placement(user1_battle_field)
-manual_ship_placement(user1_ships_field)
-fields_draw(user1_ships_field, user1_battle_field)
-for x in user1_ships_field:
-    counter = 0
-    for y in x:
-        if y == engg_cell_symbol:
-            x[counter] = field_cell
-        counter += 1
-for x in user1_battle_field:
-    counter = 0
-    for y in x:
-        if y == engg_cell_symbol:
-            x[counter] = field_cell
-        counter += 1
+def cells_around_dmg_ship(battle_field, y_coord, x_coord):
+    if 0 < y_coord > 9 and 0 < x_coord > 9:
+        battle_field[y_coord - 1:y_coord + 1:2][x_coord - 1, x_coord + 1, 2] = engg_cell_symbol
+    elif y_coord == 0 and x_coord == 0:
+        battle_field[y_coord + 1][x_coord + 1] = engg_cell_symbol
+    elif y_coord == 0 and x_coord == 9:
+        battle_field[y_coord - 1][x_coord - 1] = engg_cell_symbol
+    elif y_coord == 0 and 0 < x_coord > 9:
+        battle_field[y_coord + 1][x_coord - 1:x_coord + 1:2] = engg_cell_symbol
+    elif y_coord == 9 and x_coord == 0:
+        battle_field[y_coord - 1][x_coord + 1] = engg_cell_symbol
+    elif y_coord == 9 and 0 < x_coord > 9:
+        battle_field[y_coord - 1][x_coord - 1:x_coord + 1:2] = engg_cell_symbol
+    elif y_coord == 9 and x_coord == 9:
+        battle_field[y_coord - 1][x_coord - 1] = engg_cell_symbol
 
-print('\n')
-fields_draw(user1_ships_field, user1_battle_field)
+
+def computer_plays(ships_field, battle_field):
+    y_coord = random.randrange(0, 10)
+    x_coord = random.randrange(0, 10)
+    if ships_field[y_coord][x_coord] == ship_symbol and battle_field[y_coord][x_coord] == field_cell:
+        battle_field[y_coord][x_coord] = ship_symbol
+        ships_field[y_coord][x_coord] = damaged_ship_symbol
+        cells_around_dmg_ship(battle_field, y_coord, x_coord)
+        computer_plays(ships_field, battle_field)
+
+
+def user_plays(ships_field, battle_field):
+    xy_coord = input('Choose coordinates: A-J for columns and 0-9 for rows AND ATTACK: ')
+    x_coord, y_coord = xy_coord[0].upper(), int(xy_coord[1])
+
+    if x_coord in ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J') and y_coord in [num for num in
+                                                                                     range(0, 10)]:
+        x_coord_dict = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9}
+        x_coord = x_coord_dict[x_coord]
+        if ships_field[y_coord][x_coord] == ship_symbol and battle_field[y_coord][x_coord] == field_cell:
+            battle_field[y_coord][x_coord] = damaged_ship_symbol
+            ships_field[y_coord][x_coord] = damaged_ship_symbol
+            cells_around_dmg_ship(battle_field, y_coord, x_coord)
+            computer_plays(ships_field, battle_field)
+            print('Hit!')
+            user_plays(ships_field, battle_field)
+        else:
+            print('Miss!')
+    else:
+        print('Uh-oh, you\'ve made a mistake')
+
+
+def game():
+    random_ship_placement(user1_ships_field, user1_battle_field)
+    random_ship_placement_computer(computer_ships_field)
+    field_cleaner(user1_ships_field)
+    while True:
+        fields_draw(user1_ships_field, user1_battle_field)
+        user_plays(computer_ships_field, user1_battle_field)
+        fields_draw(user1_ships_field, user1_battle_field)
+        computer_plays(user1_ships_field, computer_battle_field)
+        fields_draw(user1_ships_field, user1_battle_field)
+
+game()
