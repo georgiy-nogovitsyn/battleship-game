@@ -29,9 +29,9 @@ def fields_draw(ships_field, battle_field):
 
 def field_cleaner(ships_field):
     for counter, x in enumerate(ships_field):
-        for y in x:
+        for index, y in enumerate(x):
             if y == engg_cell_symbol:
-                x[counter] = field_cell
+                ships_field[counter][index] = field_cell
 
 
 # that function places ships on the field properly
@@ -301,22 +301,29 @@ def computer_plays(ships_field, battle_field):
         computer_plays(ships_field, battle_field)
 
 
-def user_plays(ships_field, battle_field):
-    xy_coord = input('Choose coordinates: A-J for columns and 0-9 for rows AND ATTACK: ')
-    x_coord, y_coord = xy_coord[0].upper(), int(xy_coord[1])
+def user_plays(enemy_ships_field, user_ships_field, battle_field):
+    while True:
+        xy_coord = input('Choose coordinates: A-J for columns and 0-9 for rows AND ATTACK: ')
+        if len(xy_coord) != 2:
+            print('Mistake.')
+        else:
+            x_coord, y_coord = xy_coord[0].upper(), int(xy_coord[1])
+            break
 
     if x_coord in ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J') and y_coord in [num for num in
                                                                                      range(0, 10)]:
         x_coord_dict = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9}
         x_coord = x_coord_dict[x_coord]
-        if ships_field[y_coord][x_coord] == ship_symbol and battle_field[y_coord][x_coord] == field_cell:
+        if enemy_ships_field[y_coord][x_coord] == ship_symbol and battle_field[y_coord][x_coord] == field_cell:
             battle_field[y_coord][x_coord] = damaged_ship_symbol
-            ships_field[y_coord][x_coord] = damaged_ship_symbol
+            enemy_ships_field[y_coord][x_coord] = damaged_ship_symbol
             cells_around_dmg_ship(battle_field, y_coord, x_coord)
-            computer_plays(ships_field, battle_field)
+            computer_plays(enemy_ships_field, battle_field)
             print('Hit!')
-            user_plays(ships_field, battle_field)
+            fields_draw(user_ships_field, battle_field)
+            user_plays(enemy_ships_field, user_ships_field, battle_field)
         else:
+            battle_field[y_coord][x_coord] = engg_cell_symbol
             print('Miss!')
     else:
         print('Uh-oh, you\'ve made a mistake')
@@ -327,8 +334,7 @@ def game():
     random_ship_placement_computer(computer_ships_field)
     field_cleaner(user1_ships_field)
     while True:
-        fields_draw(user1_ships_field, user1_battle_field)
-        user_plays(computer_ships_field, user1_battle_field)
+        user_plays(computer_ships_field, user1_ships_field, user1_battle_field)
         fields_draw(user1_ships_field, user1_battle_field)
         computer_plays(user1_ships_field, computer_battle_field)
         fields_draw(user1_ships_field, user1_battle_field)
