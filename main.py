@@ -4,12 +4,11 @@ field_cell = '□'
 ship_symbol = 'S'
 damaged_ship_symbol = 'D'
 engaged_cell_symbol = '*'
+
 user1_ships_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
 user1_battle_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
 computer_ships_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
 computer_battle_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
-
-orient = 'p'
 
 
 # that function draws two fields
@@ -98,7 +97,7 @@ def ship_placement(ships_field, decks_num, orient, y_coord, x_coord):
                 ships_field[y_coord - 1][x_coord] = engaged_cell_symbol
                 ships_field[y_coord + decks_num][x_coord] = engaged_cell_symbol
             # left border
-            elif 0 < y_coord and (y_coord + decks_num - 1) != 9 and x_coord == 0:
+            elif y_coord > 0 == x_coord and (y_coord + decks_num - 1) != 9:
                 for _ in range(y_coord - 1, y_coord + decks_num + 1):
                     ships_field[_][x_coord + 1] = engaged_cell_symbol
                 ships_field[y_coord - 1][x_coord] = engaged_cell_symbol
@@ -277,21 +276,24 @@ def cells_around_dmg_ship(battle_field, y_coord, x_coord):
     if 0 < y_coord < 9 and 0 < x_coord < 9:
         battle_field[y_coord - 1][x_coord - 1:x_coord + 2:2] = engaged_cell_symbol * 2
         battle_field[y_coord + 1][x_coord - 1:x_coord + 2:2] = engaged_cell_symbol * 2
-    elif 0 < y_coord < 9 and x_coord == 0:
+    elif 9 > y_coord > 0 == x_coord:
         battle_field[y_coord - 1][x_coord + 1] = engaged_cell_symbol
         battle_field[y_coord + 1][x_coord + 1] = engaged_cell_symbol
     elif y_coord == 0 and x_coord == 0:
         battle_field[y_coord + 1][x_coord + 1] = engaged_cell_symbol
     elif y_coord == 0 and x_coord == 9:
-        battle_field[y_coord - 1][x_coord - 1] = engaged_cell_symbol
+        battle_field[y_coord + 1][x_coord - 1] = engaged_cell_symbol
     elif y_coord == 0 and 0 < x_coord < 9:
-        battle_field[y_coord + 1][x_coord - 1:x_coord + 1:2] = engaged_cell_symbol
+        battle_field[y_coord + 1][x_coord - 1:x_coord + 2:2] = engaged_cell_symbol * 2
     elif y_coord == 9 and x_coord == 0:
         battle_field[y_coord - 1][x_coord + 1] = engaged_cell_symbol
     elif y_coord == 9 and 0 < x_coord < 9:
-        battle_field[y_coord - 1][x_coord - 1:x_coord + 1:2] = engaged_cell_symbol
+        battle_field[y_coord - 1][x_coord - 1:x_coord + 2:2] = engaged_cell_symbol * 2
     elif y_coord == 9 and x_coord == 9:
         battle_field[y_coord - 1][x_coord - 1] = engaged_cell_symbol
+    elif 0 < y_coord < 9 and x_coord == 9:
+        battle_field[y_coord - 1][x_coord - 1] = engaged_cell_symbol
+        battle_field[y_coord + 1][x_coord - 1] = engaged_cell_symbol
 
 
 def computer_plays(ships_field, battle_field):
@@ -307,6 +309,7 @@ def computer_plays(ships_field, battle_field):
         print('Computer hit!')
         computer_plays(ships_field, battle_field)
     else:
+        ships_field[y_coord][x_coord] = engaged_cell_symbol
         print('Computer miss!')
 
 
