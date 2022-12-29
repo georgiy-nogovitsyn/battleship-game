@@ -10,7 +10,6 @@ user1_battle_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
 computer_ships_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
 computer_battle_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
 
-
 # that function draws two fields
 def fields_draw(ships_field, battle_field):
     print('   A B C D E F G H I J\t\t   A B C D E F G H I J')
@@ -273,6 +272,7 @@ def manual_ship_placement(ships_field, battle_field):
 
 
 def cells_around_dmg_ship(battle_field, y_coord, x_coord):
+
     if 0 < y_coord < 9 and 0 < x_coord < 9:
         battle_field[y_coord - 1][x_coord - 1:x_coord + 2:2] = engaged_cell_symbol * 2
         battle_field[y_coord + 1][x_coord - 1:x_coord + 2:2] = engaged_cell_symbol * 2
@@ -307,7 +307,11 @@ def computer_plays(ships_field, battle_field):
         ships_field[y_coord][x_coord] = damaged_ship_symbol
         cells_around_dmg_ship(battle_field, y_coord, x_coord)
         print('Computer hit!')
-        computer_plays(ships_field, battle_field)
+        if win_checker(ships_field) is False:
+            print('#############\n\nComputer won!\n\n#############')
+            return False
+        else:
+            computer_plays(ships_field, battle_field)
     else:
         ships_field[y_coord][x_coord] = engaged_cell_symbol
         print('Computer miss!')
@@ -337,10 +341,20 @@ def user_plays(enemy_ships_field, user_ships_field, battle_field):
         enemy_ships_field[y_coord][x_coord] = damaged_ship_symbol
         print('Hit!')
         fields_draw(user_ships_field, battle_field)
-        user_plays(enemy_ships_field, user_ships_field, battle_field)
+        if win_checker(enemy_ships_field) is False:
+            print('########\n\nYou won!\n\n########')
+            return False
+        else:
+            user_plays(enemy_ships_field, user_ships_field, battle_field)
     else:
         battle_field[y_coord][x_coord] = engaged_cell_symbol
         print('Miss!')
+
+def win_checker(ships_field):
+    for x in ships_field:
+        if ship_symbol in x:
+            return True
+    return False
 
 
 def game():
@@ -348,9 +362,12 @@ def game():
     random_ship_placement_computer(computer_ships_field)
     field_cleaner(user1_ships_field)
     while True:
-        user_plays(computer_ships_field, user1_ships_field, user1_battle_field)
+        if user_plays(computer_ships_field, user1_ships_field, user1_battle_field) is False:
+            break
         fields_draw(user1_ships_field, user1_battle_field)
-        computer_plays(user1_ships_field, computer_battle_field)
+
+        if computer_plays(user1_ships_field, computer_battle_field) is False:
+            break
         fields_draw(user1_ships_field, user1_battle_field)
 
 
