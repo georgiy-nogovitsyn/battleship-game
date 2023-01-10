@@ -232,7 +232,7 @@ def manual_ship_placement(ships_field, battle_field):
             try:
                 print(decks_quantity)
                 decks_num = int(input('Choose decks number (1-4): '))
-                if decks_num in [1, 2, 3, 4]:
+                if str(decks_num) in decks_quantity.keys():
                     if decks_quantity[str(decks_num)] > 0:
                         decks_quantity[str(decks_num)] -= 1
                         break
@@ -262,7 +262,7 @@ def manual_ship_placement(ships_field, battle_field):
                     x_coord = x_coord_dict[x_coord]
                     if coords_validation(ships_field, decks_num, orient, y_coord, x_coord) is True:
                         ship_placement(ships_field, decks_num, orient, y_coord, x_coord)
-                        quit()
+                        break
                     else:
                         print('You can\'t place here, probably there\'s another ship already placed')
                 else:
@@ -356,9 +356,12 @@ def win_checker(ships_field):
             return True
     return False
 
-
 def game():
-    random_ship_placement(user1_ships_field, user1_battle_field)
+
+    if input('If you want to place ships randomly print "r", for manual placement print anything: ').upper() == 'R':
+        random_ship_placement(user1_ships_field, user1_battle_field)
+    else:
+        manual_ship_placement(user1_ships_field, user1_battle_field)
     random_ship_placement_computer(computer_ships_field)
     field_cleaner(user1_ships_field)
     while True:
