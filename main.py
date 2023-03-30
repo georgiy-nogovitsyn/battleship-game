@@ -10,6 +10,7 @@ user1_battle_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
 computer_ships_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
 computer_battle_field = [[field_cell for _ in range(0, 10)] for _ in range(0, 10)]
 
+
 # that function draws two fields
 def fields_draw(ships_field, battle_field):
     print('   A B C D E F G H I J\t\t   A B C D E F G H I J')
