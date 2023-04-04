@@ -1,4 +1,4 @@
-class Board:
+class Board():
     def __init__(self):
         self.size = 10
         self.clean_cell = '□'

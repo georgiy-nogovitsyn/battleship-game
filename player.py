@@ -14,21 +14,21 @@ class Player:
             while True:
                 orientation = randint(0, 1)
                 if orientation == 0:
-                    coordinates = randint(0, 10 - ship.decks), randint(0, 10 - ship.decks)
+                    coordinates = randint(0, 10 - ship.decks), randint(0, 9)
                 elif orientation == 1:
-                    coordinates = randint(0, 10 - ship.decks), randint(0, 10 - ship.decks)
-                pos = [orientation, ship.decks, coordinates]
-                if pos[0] == 1:
-                    for coord in range(1, pos[1]):
-                        pos.append((pos[2][0] + coord, pos[2][1]))
-                elif pos[0] == 0:
-                    for coord in range(1, pos[1]):
-                        pos.append((pos[2][0], pos[2][1] + coord))
+                    coordinates = randint(0, 9), randint(0, 10 - ship.decks)
+                pos = [coordinates]
+                if orientation == 0:
+                    for coord in range(1, ship.decks):
+                        pos.append((pos[0][0] + coord, pos[0][1]))
+                elif orientation == 1:
+                    for coord in range(1, ship.decks):
+                        pos.append((pos[0][0], pos[0][1] + coord))
                 flag = True
                 for n_ship in self.ships:
                     if not flag:
                         break
-                    for coords in pos[2:]:
+                    for coords in pos:
                         for x in range(coords[0]-1, coords[0]+2):
                             for y in range(coords[1]-1, coords[1]+2):
                                 if (x, y) in n_ship.pos:
@@ -37,7 +37,7 @@ class Player:
 
                 if flag:
                     ship.pos = pos
-                    self.all_pos.extend(pos[2:])
+                    self.all_pos.extend(pos)
                     break
 
 
