@@ -14,9 +14,9 @@ class Player:
             while True:
                 orientation = randint(0, 1)
                 if orientation == 0:
-                    coordinates = randint(0, 9 - ship.decks + 1), randint(0, 9 - ship.decks + 1)
+                    coordinates = randint(0, 10 - ship.decks), randint(0, 10 - ship.decks)
                 elif orientation == 1:
-                    coordinates = randint(0, 9 - ship.decks + 1), randint(0, 9 - ship.decks + 1)
+                    coordinates = randint(0, 10 - ship.decks), randint(0, 10 - ship.decks)
                 pos = [orientation, ship.decks, coordinates]
                 if pos[0] == 1:
                     for coord in range(1, pos[1]):
@@ -28,40 +28,12 @@ class Player:
                 for n_ship in self.ships:
                     if not flag:
                         break
-                    for coords in pos[2:]:  # need to refactor
-                        if coords in n_ship.pos:
-                            flag = False
-                            break
-                        if (coords[0] + 1, coords[1] + 1) in n_ship.pos:
-                            flag = False
-                            break
-                        if (coords[0] - 1, coords[1] - 1) in n_ship.pos:
-                            flag = False
-                            break
-                        if (coords[0] - 1, coords[1]) in n_ship.pos:
-                            flag = False
-                            break
-                        if (coords[0], coords[1] - 1) in n_ship.pos:
-                            flag = False
-                            break
-                        if (coords[0] + 1, coords[1]) in n_ship.pos:
-                            flag = False
-                            break
-                        if (coords[0], coords[1] + 1) in n_ship.pos:
-                            flag = False
-                            break
-                        if (coords[0] - 1, coords[1] + 1) in n_ship.pos:
-                            flag = False
-                            break
-                        if (coords[0] + 1, coords[1] - 1) in n_ship.pos:
-                            flag = False
-                            break
-                        if (coords[0] + 1, coords[1] - 1) in n_ship.pos:
-                            flag = False
-                            break
-                        if (coords[0] - 1, coords[1] + 1) in n_ship.pos:
-                            flag = False
-                            break
+                    for coords in pos[2:]:
+                        for x in range(coords[0]-1, coords[0]+2):
+                            for y in range(coords[1]-1, coords[1]+2):
+                                if (x, y) in n_ship.pos:
+                                    flag = False
+                                    break
 
                 if flag:
                     ship.pos = pos

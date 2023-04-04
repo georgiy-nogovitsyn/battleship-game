@@ -38,4 +38,4 @@ def fields_draw(ships_field):
         for ch in ships_field[x]:
             print(ch, end=' ')
         print()
-fields_draw(ships_field)
+
