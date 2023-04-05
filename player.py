@@ -7,43 +7,43 @@ class Player:
     def __init__(self):
         self.board = board.Board()
         self.ships = [Ship.Ship(decks) for decks in (4, 3, 3, 2, 2, 2, 1, 1, 1, 1)]
-        self.all_pos = []
+        self.all_ships_coordinates = {}
     # x = horizontal, 0; y = vertical, 1
-    def random_ship_placement(self):
+
+    def ship_placement(self):
         for ship in self.ships:
             while True:
                 orientation = randint(0, 1)
+                coordinates = []
                 if orientation == 0:
-                    coordinates = randint(0, 10 - ship.decks), randint(0, 9)
-                elif orientation == 1:
-                    coordinates = randint(0, 9), randint(0, 10 - ship.decks)
-                pos = [coordinates]
-                if orientation == 0:
+                    coordinates = [(randint(0, 10 - ship.decks), randint(0, 9))]
                     for coord in range(1, ship.decks):
-                        pos.append((pos[0][0] + coord, pos[0][1]))
+                        coordinates.append((coordinates[0][0] + coord, coordinates[0][1]))
                 elif orientation == 1:
+                    coordinates = [(randint(0, 9), randint(0, 10 - ship.decks))]
                     for coord in range(1, ship.decks):
-                        pos.append((pos[0][0], pos[0][1] + coord))
+                        coordinates.append((coordinates[0][0], coordinates[0][1] + coord))
                 flag = True
                 for n_ship in self.ships:
                     if not flag:
                         break
-                    for coords in pos:
-                        for x in range(coords[0]-1, coords[0]+2):
-                            for y in range(coords[1]-1, coords[1]+2):
-                                if (x, y) in n_ship.pos:
+                    for coordinate in coordinates:
+                        for x in range(coordinate[0] - 1, coordinate[0] + 2):
+                            for y in range(coordinate[1] - 1, coordinate[1] + 2):
+                                if (x, y) in n_ship.coordinates:
                                     flag = False
                                     break
-
                 if flag:
-                    ship.pos = pos
-                    self.all_pos.extend(pos)
+                    ship.coordinates = dict.fromkeys(coordinates, 1)
+                    self.all_ships_coordinates.update(ship.coordinates)
                     break
 
 
 player = Player()
-player.random_ship_placement()
 
-player.board.board_draw(player.all_pos)
 
-print(player.all_pos)
+player.ship_placement()
+
+player.board.board_draw(player.all_ships_coordinates)
+
+print(player.all_ships_coordinates)

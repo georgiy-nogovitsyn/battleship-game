@@ -2,7 +2,7 @@ class Board():
     def __init__(self):
         self.size = 10
         self.clean_cell = '□'
-        self.field = [[self.clean_cell for _ in range(self.size)] for _ in range(self.size)]
+        self.field = [[self.clean_cell] * self.size] * self.size
         self.battle_field = [[self.clean_cell for _ in range(self.size)] for _ in range(self.size)]
 
     def board_draw(self, positions=[]):

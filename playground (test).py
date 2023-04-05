@@ -26,6 +26,7 @@ for i_r, x in enumerate(ships_field):
 
 # 5, 5, 4, 0
 
+matrix = [[0] * 10] * 10
 
 def fields_draw(ships_field):
     print('   A B C D E F G H I J\t\t   A B C D E F G H I J')
@@ -38,4 +39,4 @@ def fields_draw(ships_field):
         for ch in ships_field[x]:
             print(ch, end=' ')
         print()
-
+fields_draw(matrix)
