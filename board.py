@@ -3,7 +3,7 @@ class Board():
         self.size = 10
         self.clean_cell = '□'
         self.field = [[self.clean_cell] * self.size] * self.size
-        self.battle_field = [[self.clean_cell for _ in range(self.size)] for _ in range(self.size)]
+        self.battle_field = [[self.clean_cell] * self.size] * self.size
 
     def board_draw(self, positions=[]):
         print('   A B C D E F G H I J\t\t A B C D E F G H I J')
