@@ -39,4 +39,21 @@ def fields_draw(ships_field):
         for ch in ships_field[x]:
             print(ch, end=' ')
         print()
-fields_draw(matrix)
+# fields_draw(matrix)
+
+fld = [[(x, y) for x in range(10)] for y in range(10)]
+
+field = {(x, y): True for x in range(10) for y in range(10)}
+field[(5,5)] = 'y'
+
+for index, x in enumerate(field):
+    if (index + 1) % 10 == 0:
+        if field[x]:
+            print('x')
+        else:
+            print('y')
+    else:
+        if field[x]:
+            print('x', end=' ')
+        else:
+            print('y', end=' ')

@@ -35,15 +35,12 @@ class Player:
                                     break
                 if flag:
                     ship.coordinates = dict.fromkeys(coordinates, 1)
+                    for coordinate in ship.coordinates:
+                        self.board.fld.remove(coordinate)
                     self.all_ships_coordinates.update(ship.coordinates)
                     break
 
 
 player = Player()
-
-
 player.ship_placement()
-
-player.board.board_draw(player.all_ships_coordinates)
-
-print(player.all_ships_coordinates)
+player.board.board_print(player.ships)
