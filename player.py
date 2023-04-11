@@ -24,23 +24,25 @@ class Player:
                     for coord in range(1, ship.decks):
                         coordinates.append((coordinates[0][0], coordinates[0][1] + coord))
                 flag = True
-                for n_ship in self.ships:
+                for check_ship in self.ships:
                     if not flag:
                         break
                     for coordinate in coordinates:
-                        for x in range(coordinate[0] - 1, coordinate[0] + 2):
-                            for y in range(coordinate[1] - 1, coordinate[1] + 2):
-                                if (x, y) in n_ship.coordinates:
+                        for y in range(coordinate[0] - 1, coordinate[0] + 2):
+                            for x in range(coordinate[1] - 1, coordinate[1] + 2):
+                                if (y, x) in check_ship.coordinates:
                                     flag = False
                                     break
                 if flag:
                     ship.coordinates = dict.fromkeys(coordinates, 1)
                     for coordinate in ship.coordinates:
-                        self.board.fld.remove(coordinate)
+                        self.board.field.pop(coordinate)
                     self.all_ships_coordinates.update(ship.coordinates)
                     break
 
 
 player = Player()
 player.ship_placement()
-player.board.board_print(player.ships)
+player.board.draw(player.ships)
+# print(player.all_ships_coordinates)
+# print(player.board.field)
