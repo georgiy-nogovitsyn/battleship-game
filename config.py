@@ -1,4 +1,5 @@
-CLEAN_CELL = '.'
-DAMAGED_CELL = 'x'
+CLEAN_CELL = '◦'
+DAMAGED_CELL = '*'
 SHIP_CELL = 'S'
 DAMAGED_SHIP_CELL = '$'
+'●'

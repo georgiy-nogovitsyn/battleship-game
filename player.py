@@ -37,6 +37,7 @@ class Player:
                     ship.coordinates = dict.fromkeys(coordinates, 1)
                     for coordinate in ship.coordinates:
                         self.board.field.pop(coordinate)
+                        # self.board.battle_field.pop(coordinate) opponent battlefield
                     self.all_ships_coordinates.update(ship.coordinates)
                     break
 
@@ -46,3 +47,10 @@ player.ship_placement()
 player.board.draw(player.ships)
 # print(player.all_ships_coordinates)
 # print(player.board.field)
+
+# [-1][-1]     [-1][+1]
+#         0 0 0
+#         0 x 0
+#         0 0 0
+# [+1][-1]     [+1][+1]
+

@@ -1,59 +1,23 @@
+def romanToInt(s):
+    d = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
+    nums = []
+    total = 0
+    for sym in s:
+        nums.append(d[sym])
+    # MCMXCIV 1000 100 1000 10 100 1 5
+    flag = True
+    for i, num in enumerate(nums):
+        if i < len(nums) - 1:
+            if flag:
+                if num >= nums[i + 1]:
+                    total += num
+                else:
+                    total += nums[i + 1] - num
+                    flag = False
+            else:
+                flag = True
+        elif i == len(nums) - 1 and flag:
+            total += num
+    return total
 
-ships_field = [[0 for _ in range(0,10)] for x in range(0,10)]
-a = {'orientation': 0, 'decks': 3, 'x': 3, 'y': 3}
-
-#(5, 5), 4, 0
-b = [0, 3, (3, 3)]
-if b[0] == 1:
-    for coord in range(1, b[1]):
-        b.append((b[-1][0] + 1, b[-1][-1]))
-    print(b)
-elif b[0] == 0:
-    for coord in range(1, b[1]):
-        b.append((b[-1][0], b[-1][-1] + 1))
-print(b)
-for i_r, x in enumerate(ships_field):
-    for i_c, y in enumerate(x):
-        if (i_r, i_c) in b:
-            ships_field[i_r][i_c] = 1
-        else:
-            if b[0] == 0:
-                if b[2][0] - 1 <= i_r <= b[2][0] + 1 and b[2][1] - 1 <= i_c <= b[2][1] + b[1]:
-                    ships_field[i_r][i_c] = 'x'
-            elif b[0] == 1:
-                if b[2][0] - 1 <= i_r <= b[2][0] + b[1] and b[2][1] - 1 <= i_c <= b[2][1] + 1:
-                    ships_field[i_r][i_c] = 'x'
-
-# 5, 5, 4, 0
-
-matrix = [[0] * 10] * 10
-
-def fields_draw(ships_field):
-    print('   A B C D E F G H I J\t\t   A B C D E F G H I J')
-    for x in range(0, 10):
-        print(x, end='  ')
-        for ch in ships_field[x]:
-            print(ch, end=' ')
-        print('\t' * 2, end='')
-        print(x, end='  ')
-        for ch in ships_field[x]:
-            print(ch, end=' ')
-        print()
-# fields_draw(matrix)
-
-fld = [[(x, y) for x in range(10)] for y in range(10)]
-
-field = {(x, y): True for x in range(10) for y in range(10)}
-field[(5,5)] = 'y'
-
-for index, x in enumerate(field):
-    if (index + 1) % 10 == 0:
-        if field[x]:
-            print('x')
-        else:
-            print('y')
-    else:
-        if field[x]:
-            print('x', end=' ')
-        else:
-            print('y', end=' ')
+print(romanToInt('III'))
