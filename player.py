@@ -66,6 +66,34 @@ class Player:
                         self.board.battlefield[choice] = 0
                         opponent_field[choice] = 0
                         break
+        if self.computer is not True:
+            def user_input():
+                xz = input('Input: ')
+                choice = []
+                for x in xz:
+                    choice.append(int(x))
+                return tuple(choice)
+
+            flag = False
+            while True:
+                choice = user_input()
+                for ship in opponent_ships:
+                    if choice in ship.coordinates:
+                        if ship.coordinates[choice] == 1:
+                            ship.coordinates[choice] = 0
+                            print(f'get the ship {choice}')
+                            flag = True
+                            break
+                        elif ship.coordinates[choice] == 0:
+                            choice = user_input()
+                if flag:
+                    break
+                else:
+                    if self.board.battlefield[choice] == 1:
+                        print(f'missed {choice}')
+                        self.board.battlefield[choice] = 0
+                        opponent_field[choice] = 0
+                        break
 
 
 player = Player(False)
@@ -73,8 +101,10 @@ comp = Player(True)
 player.ship_placement()
 # player.board.draw(player.ships)
 # player.board.draw_new(player.ships)
-for _ in range(25):
+for _ in range(10):
     comp.attack(player.ships, player.board.field)
+for _ in range(10):
+    player.attack(comp.ships, comp.board.field)
 player.board.draw_new(player.ships, comp.ships)
 comp.board.draw_new(comp.ships, player.ships)
 # [-1][-1]     [-1][+1]

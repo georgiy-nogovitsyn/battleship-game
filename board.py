@@ -8,7 +8,7 @@ class Board:
         self.battlefield = dict.fromkeys([(y, x) for y in range(10) for x in range(10)], 1)
 
     def draw_new(self, ships, opponent_ships):
-        print('   A  B  C  D  E  F  G  H  I  J \t\t A  B  C  D  E  F  G  H  I  J')
+        print('   0  1  2  3  4  5  6  7  8  9 \t\t 0  1  2  3  4  5  6  7  8  9')
         for y in range(self.size):
             print(y, end='  ')
             for x in range(self.size):
