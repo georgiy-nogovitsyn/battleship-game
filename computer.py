@@ -1,13 +1,14 @@
+
 import board
 import ship_class
 from random import randint
 
 
-class Player:
+class Comp:
     def __init__(self):
         self.board = board.Board()
         self.ships = [ship_class.Ship(decks) for decks in (4, 3, 3, 2, 2, 2, 1, 1, 1, 1)]
-        self.all_ships_coordinates = {}
+        self.ship_placement()
 
     # x = horizontal, 0; y = vertical, 1
     def ship_placement(self):
@@ -35,43 +36,36 @@ class Player:
                                     break
                 if flag:
                     ship.coordinates = dict.fromkeys(coordinates, 1)
-                    self.all_ships_coordinates.update(ship.coordinates)
-                    # for coordinate in ship.coordinates:
-                    #     self.board.field.pop(coordinate)
-                    #     self.board.battlefield.pop(coordinate)  # opponent battlefield
                     break
 
     def attack(self, opponent_ships, opponent_field):
-        def user_input():
-            xz = input('Input: ')
-            choice = []
-            for x in xz:
-                choice.append(int(x))
-            return tuple(choice)
-
-        flag = False
+        flag = False, False
         while True:
-            choice = user_input()
+            choice = randint(0, 9), randint(0, 9)
+            if flag == (True, True):
+                break
             for ship in opponent_ships:
                 if choice in ship.coordinates:
                     if ship.coordinates[choice] == 1:
                         ship.coordinates[choice] = 0
                         print(f'get the ship {choice}')
-                        flag = True
+                        flag = True, True
                         break
                     elif ship.coordinates[choice] == 0:
-                        choice = user_input()
-            if flag:
+                        choice = randint(0, 9), randint(0, 9)
+                        flag = True, False
+                        break
+            if flag == (True, True):
                 break
+            elif flag == (True, False):
+                continue
             else:
-                if self.board.battlefield[choice] == 1:
-                    print(f'missed {choice}')
-                    self.board.battlefield[choice] = 0
-                    opponent_field[choice] = 0
-                    break
-
-# [-1][-1]     [-1][+1]
-#         0 0 0
-#         0 x 0
-#         0 0 0
-# [+1][-1]     [+1][+1]
+                for row in self.board.battlefield:
+                    if choice in row:
+                        if row[choice] == 1:
+                            print(f'missed {choice}')
+                            row[choice] = 0
+                            flag = True, True
+                            break
+                        elif row[choice] == 0:
+                            break
