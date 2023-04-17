@@ -1,7 +1,7 @@
 
 import board
 import ship_class
-from random import randint
+from random import randint, choice as ch
 
 
 class Comp:
@@ -44,6 +44,8 @@ class Comp:
             choice = randint(0, 9), randint(0, 9)
             if flag == (True, True):
                 break
+            else:
+                flag = False, False
             for ship in opponent_ships:
                 if choice in ship.coordinates:
                     if ship.coordinates[choice] == 1:
@@ -60,11 +62,12 @@ class Comp:
             elif flag == (True, False):
                 continue
             else:
-                for row in self.board.battlefield:
+                for i, row in enumerate(self.board.battlefield):
                     if choice in row:
                         if row[choice] == 1:
                             print(f'missed {choice}')
                             row[choice] = 0
+                            opponent_field[i][choice] = 0
                             flag = True, True
                             break
                         elif row[choice] == 0:
