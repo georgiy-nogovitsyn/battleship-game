@@ -1,7 +1,13 @@
-fld = dict.fromkeys([(y, x) for y in range(10) for x in range(10)], 1)
+import player
+import computer
 
-field = [{(y, x): 1 for x in range(10)} for y in range(10)]
-print(field)
+comp = computer.Comp()
+player = player.Player()
+player.ship_placement()
 
-y = [4,5,6]
+for x in range(100):
+    comp.attack(player.ships, player.board.field)
+    print(x)
 
+comp.board.draw(comp.ships, player.ships)
+player.board.draw(player.ships, comp.ships)
