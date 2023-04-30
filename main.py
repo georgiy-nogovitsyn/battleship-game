@@ -42,5 +42,6 @@ while True:
         else:
             break
     if game is False:
+        player.board.draw(player.ships, comp.ships)
         print(f'{winner} wins!')
         break
