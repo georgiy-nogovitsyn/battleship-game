@@ -13,9 +13,34 @@ player.ship_placement()
 #     print(ship.status_update())
 # comp.board.draw(comp.ships, player.ships)
 # player.board.draw(player.ships, comp.ships)
-
+game = True
 while True:
-    player.attack(comp.ships, comp.board.field)
-    comp.attack(player.ships, player.board.field)
-    player.board.draw(player.ships, comp.ships)
-
+    while game:
+        player.board.draw(player.ships, comp.ships)
+        if player.attack(comp.ships, comp.board.field) is True:
+            for ship in comp.ships:
+                ship.status_update()
+                if ship.status is True:
+                    game = True
+                    break
+                else:
+                    game = False
+                    winner = 'Player'
+        else:
+            break
+    while game:
+        player.board.draw(player.ships, comp.ships)
+        if comp.attack(player.ships, player.board.field) is True:
+            for ship in player.ships:
+                ship.status_update()
+                if ship.status is True:
+                    game = True
+                    break
+                else:
+                    game = False
+                    winner = 'Comp'
+        else:
+            break
+    if game is False:
+        print(f'{winner} wins!')
+        break

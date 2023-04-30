@@ -28,18 +28,20 @@ class Player:
                     if not flag:
                         break
                     for coordinate in coordinates:
-                        for y in range(coordinate[0] - 1, coordinate[0] + 2):
-                            for x in range(coordinate[1] - 1, coordinate[1] + 2):
-                                if (y, x) in check_ship.coordinates:
+                        for x in range(coordinate[0] - 1, coordinate[0] + 2):
+                            for y in range(coordinate[1] - 1, coordinate[1] + 2):
+                                if (x, y) in check_ship.coordinates:
                                     flag = False
                                     break
                 if flag:
                     ship.coordinates = dict.fromkeys(coordinates, 1)
+                    ship.orientation = orientation
                     self.all_ships_coordinates.update(ship.coordinates)
                     break
 
     def attack(self, opponent_ships, opponent_field):
         flag = False, False
+        ship_hit = False
         while True:
             if flag == (True, True):
                 break
@@ -48,17 +50,34 @@ class Player:
             while True:
                 player_input = input('Enter the x, y coordinates from 00 to 99, e.g. 37: ')
                 if player_input.isdigit() and len(player_input) == 2:
-                    # print(player_input)
                     choice = int(player_input[0]), int(player_input[1])
-                    print(choice)
                     break
                 else:
                     print('Input is not valid.')
             for ship in opponent_ships:
                 if choice in ship.coordinates:
                     if ship.coordinates[choice] == 1:
-                        print('Ship is on fire!')
                         ship.coordinates[choice] = 0
+                        ship_hit = True
+                        ship.status_update()
+                        if ship.status is True:
+                            damaged_cells = ((choice[0] + 1, choice[1] - 1), (choice[0] - 1, choice[1] + 1),\
+                                             (choice[0] + 1, choice[1] + 1), (choice[0] - 1, choice[1] - 1))
+                            for i, coordinates in enumerate(self.board.battlefield):
+                                for eng_coord in damaged_cells:
+                                    if eng_coord in coordinates:
+                                        coordinates[eng_coord] = 0
+                                        opponent_field[i][eng_coord] = 0
+                            print('Ship is on fire!')
+                        elif ship.status is False:
+                            print('You destroyed the ship!')
+                            for coordinate in sorted(ship.coordinates.keys()):
+                                for x in range(coordinate[0] - 1, coordinate[0] + 2):
+                                    for y in range(coordinate[1] - 1, coordinate[1] + 2):
+                                        for i, coordinates in enumerate(self.board.battlefield):
+                                            if (x, y) in coordinates and (x, y) not in ship.coordinates:
+                                                coordinates[(x, y)] = 0
+                                                opponent_field[i][(x, y)] = 0
                         flag = True, True
                         break
                     elif ship.coordinates[choice] == 0:
@@ -73,7 +92,7 @@ class Player:
                 for i, row in enumerate(self.board.battlefield):
                     if choice in row:
                         if row[choice] == 1:
-                            print('Missed.')
+                            print('You missed.')
                             row[choice] = 0
                             opponent_field[i][choice] = 0
                             flag = True, True
@@ -81,10 +100,4 @@ class Player:
                         elif row[choice] == 0:
                             print('You already hit that cell')
                             break
-
-
-# [-1][-1]     [-1][+1]
-#         0 0 0
-#         0 x 0
-#         0 0 0
-# [+1][-1]     [+1][+1]
+        return ship_hit

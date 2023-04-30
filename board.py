@@ -34,7 +34,7 @@ class Board:
                 for ship in opponent_ships:
                     if cell in ship.coordinates:
                         if ship.coordinates[cell] == 1:
-                            print(config.SHIP_CELL, end='  ')
+                            print(config.CLEAN_CELL, end='  ')
                         elif ship.coordinates[cell] == 0:
                             print(config.DAMAGED_SHIP_CELL, end='  ')
                         flag = True
