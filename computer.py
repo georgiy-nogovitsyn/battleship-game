@@ -42,12 +42,36 @@ class Comp:
         flag = False, False
         ship_hit = False
         while True:
-            choice = randint(0, 9), randint(0, 9)
             if flag == (True, True):
                 break
-            else:
+            elif flag != (False, False):
                 flag = False, False
+            local_flag = True
+            for ship in opponent_ships:
+                if local_flag is False:
+                    break
+                if 0 in ship.coordinates.values() and ship.status is True:
+                    coordinates_for_choice = []
+                    for coordinate in ship.coordinates:
+                        if local_flag is False:
+                            break
+                        if ship.coordinates[coordinate] == 0:
+                            for x in range(coordinate[0] - 1, coordinate[0] + 2):
+                                if local_flag is False:
+                                    break
+                                for y in range(coordinate[1] - 1, coordinate[1] + 2):
+                                    if local_flag is False:
+                                        break
+                                    if 9 >= x >= 0 and 9 >= y >= 0 and (x, y) != coordinate:
+                                        if ship.coordinates.get((x, y)) != 0 and self.board.battlefield[x][x, y] != 0:
+                                            coordinates_for_choice.append((x, y))
+                    else:
+                        choice = ch(coordinates_for_choice)
+                        local_flag = False
+                        break
 
+            if local_flag is True:
+                choice = randint(0, 9), randint(0, 9)
             for ship in opponent_ships:
                 if choice in ship.coordinates:
                     if ship.coordinates[choice] == 1:
@@ -72,8 +96,6 @@ class Comp:
                                             if (x, y) in coordinates and (x, y) not in ship.coordinates:
                                                 coordinates[(x, y)] = 0
                                                 opponent_field[i][(x, y)] = 0
-                        flag = True, True
-                        break
                         flag = True, True
                         break
                     elif ship.coordinates[choice] == 0:
