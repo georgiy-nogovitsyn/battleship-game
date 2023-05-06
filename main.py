@@ -2,8 +2,8 @@ import player
 import computer
 
 comp = computer.Comp()
-player = computer.Comp()
-# player = player.Player()
+# player = computer.Comp()
+player = player.Player()
 player.ship_placement()
 
 
