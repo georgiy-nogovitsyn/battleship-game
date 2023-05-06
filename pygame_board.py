@@ -1,6 +1,6 @@
 from pygame_config import *
 import pygame
-
+import player
 pygame.init()
 
 # Set up the game window
@@ -16,9 +16,9 @@ CELL = 30
 left_border_offset = CELL
 right_border_offset = WIDTH - CELL * 11
 top_offset = CELL
-
-ships = [{(0,0):1, (0,1):1}, {(2,5):1}, {(8,8):1}]
-ships2 = [{(1,1):1, (1,2):1}, {(1,3):1}, {(8,8):1}]
+player = player.Player()
+player.ship_placement()
+# ships2 = [{(1,1):1, (1,2):1}, {(1,3):1}, {(8,8):1}]
 
 class Board:
     def __init__(self):
@@ -26,23 +26,21 @@ class Board:
         self.field = [{(y, x): 1 for x in range(10)} for y in range(10)]
         self.battlefield = [{(y, x): 1 for x in range(10)} for y in range(10)]
 
-    def draw_pygame_board(self,ships, offset_x,offset_y):
+    def draw_pygame_board(self, ships, offset_x, offset_y):
         for line in self.field:
             for cell in line:
-                y, x = cell
+                x, y = cell
                 status = line[cell]
                 for ship in ships:
-                    if cell in ship:
-                        status = ship[cell]
+                    if cell in ship.coordinates:
+                        status = ship.coordinates[cell]
                         cell_color = self.cell_status(status, True)
                         break
                     else:
-                        cell_color = self.cell_status(status,False)
+                        cell_color = self.cell_status(status, False)
                 pygame.draw.rect(screen, cell_color, [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL])
-                pygame.draw.rect(screen, (0,0,0), [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL], width=2,
+                pygame.draw.rect(screen, (0, 0, 0), [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL], width=2,
                                  border_radius=3)
-
-
 
     def cell_status(self, status, if_ship):
         """status = cell status, if_ship = cell is ship or not"""
@@ -67,8 +65,8 @@ if __name__ == '__main__':
     while running:
         screen.fill((255,255,255))
 
-        pygame_board.draw_pygame_board(ships,left_border_offset,top_offset)
-        pygame_board.draw_pygame_board(ships2,right_border_offset,top_offset)
+        pygame_board.draw_pygame_board(player.ships, left_border_offset, top_offset)
+        pygame_board.draw_pygame_board(player.ships, right_border_offset, top_offset)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

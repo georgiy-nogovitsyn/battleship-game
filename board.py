@@ -4,7 +4,7 @@ import config
 class Board:
     def __init__(self):
         self.size = 10
-        self.field = [{(y, x): 1 for x in range(10)} for y in range(10)]
+        self.field = [{(y, x): 1 for x in range(10)} for y in range(10)] # список < словари < координаты это (x, y): 0 или 1. 0 поврежденная, 1 целая.
         self.battlefield = [{(y, x): 1 for x in range(10)} for y in range(10)]
 
     def draw(self, ships, opponent_ships):

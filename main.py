@@ -6,7 +6,7 @@ comp = computer.Comp()
 player = player.Player()
 player.ship_placement()
 
-
+print(player.ships)
 game = True
 while True:
     while game:
