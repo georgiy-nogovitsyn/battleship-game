@@ -46,14 +46,14 @@ def draw_board(board, offset_x=0, offset_y=CELL):
 def get_highlighted_cell_coordinate(mousepos):
     """Return coordinate of highlighted cell and board"""
     x, y = mousepos[0], mousepos[1]
-    if left_border_offset < x < left_border_offset + CELL * 10:
-        if top_offset < y < top_offset + CELL * 10:
-            pos_x, pos_y = int((x - left_border_offset) / CELL), int((y - top_offset) / CELL)
-            return [pos_x, pos_y], 0
-    elif right_border_offset < x < right_border_offset + CELL * 10:
+    # if left_border_offset < x < left_border_offset + CELL * 10:
+    #     if top_offset < y < top_offset + CELL * 10:
+    #         pos_x, pos_y = int((x - left_border_offset) / CELL), int((y - top_offset) / CELL)
+    #         return [pos_x, pos_y], 0
+    if right_border_offset < x < right_border_offset + CELL * 10:
         if top_offset < y < top_offset + CELL * 10:
             pos_x, pos_y = int((x - right_border_offset) / CELL), int((y - top_offset) / CELL)
-            return [pos_x, pos_y], 1
+            return [pos_x, pos_y]
 
     else:
         return None
@@ -61,14 +61,14 @@ def get_highlighted_cell_coordinate(mousepos):
 
 def highlight_cell(coord):
     """draws a rectangle on given coordinates"""
-    x, y = coord[0]
+    x, y = coord
 
-    if coord[1] == 0:  # highlight for left board
-        pygame.draw.rect(screen, GREEN, [(CELL * x) + left_border_offset, (CELL * y) + top_offset, CELL, CELL],
-                         border_radius=3)
+    # if coord[1] == 0:  # highlight for left board
+    #     pygame.draw.rect(screen, GREEN, [(CELL * x) + left_border_offset, (CELL * y) + top_offset, CELL, CELL],
+    #                      border_radius=3)
 
-    elif coord[1] == 1:
-        pygame.draw.rect(screen, GREEN, [(CELL * x) + right_border_offset, (CELL * y) + top_offset, CELL, CELL],
+    # elif coord[1] == 1:
+    pygame.draw.rect(screen, GREEN, [(CELL * x) + right_border_offset, (CELL * y) + top_offset, CELL, CELL],
                          border_radius=3)
 
 
@@ -88,6 +88,7 @@ while running:
             mousepos = pygame.mouse.get_pos()
             highlight_coord = get_highlighted_cell_coordinate(mousepos)
             mouse_last_pos = highlight_coord  # Save mouse position
+            print(mouse_last_pos)
 
     if mouse_last_pos:  # Highlight board cell
         highlight_cell(mouse_last_pos)

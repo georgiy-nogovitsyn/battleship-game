@@ -1,7 +1,10 @@
 from pygame_config import *
 import pygame
 import player
+
 pygame.init()
+clock = pygame.time.Clock()
+
 
 # Set up the game window
 WIDTH = 800
@@ -18,7 +21,10 @@ right_border_offset = WIDTH - CELL * 11
 top_offset = CELL
 player = player.Player()
 player.ship_placement()
+
+
 # ships2 = [{(1,1):1, (1,2):1}, {(1,3):1}, {(8,8):1}]
+
 
 class Board:
     def __init__(self):
@@ -56,14 +62,43 @@ class Board:
                 cell = SHIP_CELL
         return cell
 
+    def get_highlighted_cell_coordinate(self, mousepos):
+        """Return coordinate of highlighted cell and board"""
+        x, y = mousepos[0], mousepos[1]
+        if left_border_offset < x < left_border_offset + CELL * 10:
+            if top_offset < y < top_offset + CELL * 10:
+                pos_x, pos_y = int((x - left_border_offset) / CELL), int((y - top_offset) / CELL)
+                return [pos_x, pos_y], 0
+        elif right_border_offset < x < right_border_offset + CELL * 10:
+            if top_offset < y < top_offset + CELL * 10:
+                pos_x, pos_y = int((x - right_border_offset) / CELL), int((y - top_offset) / CELL)
+                return [pos_x, pos_y], 1
+
+        else:
+            return None
+
+    def highlight_cell(self, coord):
+        """draws a rectangle on given coordinates"""
+        x, y = coord[0]
+
+        if coord[1] == 0:  # highlight for left board
+            pygame.draw.rect(screen, HIGHLIGHT_COLOR,
+                             [(CELL * x) + left_border_offset, (CELL * y) + top_offset, CELL, CELL], width=2,
+                             border_radius=3)
+
+        elif coord[1] == 1:
+            pygame.draw.rect(screen, HIGHLIGHT_COLOR,
+                             [(CELL * x) + right_border_offset, (CELL * y) + top_offset, CELL, CELL],
+                             width=2, border_radius=3)
 
 
 if __name__ == '__main__':
     pygame_board = Board()
+    mouse_last_pos = []
 
     running = True
     while running:
-        screen.fill((255,255,255))
+        screen.fill((255, 255, 255))
 
         pygame_board.draw_pygame_board(player.ships, left_border_offset, top_offset)
         pygame_board.draw_pygame_board(player.ships, right_border_offset, top_offset)
@@ -71,7 +106,17 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.MOUSEMOTION:
+                mousepos = pygame.mouse.get_pos()
+                highlight_coord = pygame_board.get_highlighted_cell_coordinate(mousepos)
+                mouse_last_pos = highlight_coord
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    pass
+
+        if mouse_last_pos:  # Highlight board cell
+            pygame_board.highlight_cell(mouse_last_pos)
 
         pygame.display.flip()
+        clock.tick(30)
 
     pygame.quit()
