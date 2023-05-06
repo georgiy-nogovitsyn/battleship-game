@@ -1,7 +1,6 @@
 from pygame_config import *
 import pygame
-import player
-
+import pygame_player, pygame_computer
 pygame.init()
 clock = pygame.time.Clock()
 
@@ -19,7 +18,8 @@ CELL = 30
 left_border_offset = CELL
 right_border_offset = WIDTH - CELL * 11
 top_offset = CELL
-player = player.Player()
+player = pygame_player.Player()
+comp = pygame_computer.Comp()
 player.ship_placement()
 
 
@@ -32,25 +32,25 @@ class Board:
         self.field = [{(y, x): 1 for x in range(10)} for y in range(10)]
         self.battlefield = [{(y, x): 1 for x in range(10)} for y in range(10)]
 
-    def draw_pygame_board(self, ships, offset_x, offset_y):
-        for line in self.field:
+    def draw_pygame_board(self, field, ships, offset_x, offset_y, is_hidden):
+        for line in field:
             for cell in line:
                 x, y = cell
                 status = line[cell]
                 for ship in ships:
                     if cell in ship.coordinates:
                         status = ship.coordinates[cell]
-                        cell_color = self.cell_status(status, True)
+                        cell_color = self.cell_status(status, True, is_hidden)
                         break
                     else:
-                        cell_color = self.cell_status(status, False)
+                        cell_color = self.cell_status(status, False, is_hidden)
                 pygame.draw.rect(screen, cell_color, [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL])
                 pygame.draw.rect(screen, (0, 0, 0), [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL], width=2,
                                  border_radius=3)
 
-    def cell_status(self, status, if_ship):
+    def cell_status(self, status, is_ship, is_hidden):
         """status = cell status, if_ship = cell is ship or not"""
-        if not if_ship:
+        if not is_ship:
             if status == 0:
                 cell = DAMAGED_CELL
             else:
@@ -59,7 +59,10 @@ class Board:
             if status == 0:
                 cell = DAMAGED_SHIP_CELL
             else:
-                cell = SHIP_CELL
+                if is_hidden:
+                    cell = CLEAN_CELL
+                else:
+                    cell = SHIP_CELL
         return cell
 
     def get_highlighted_cell_coordinate(self, mousepos):
@@ -100,8 +103,8 @@ if __name__ == '__main__':
     while running:
         screen.fill((255, 255, 255))
 
-        pygame_board.draw_pygame_board(player.ships, left_border_offset, top_offset)
-        pygame_board.draw_pygame_board(player.ships, right_border_offset, top_offset)
+        pygame_board.draw_pygame_board(player.board.field, player.ships, left_border_offset, top_offset, False)
+        pygame_board.draw_pygame_board(player.board.battlefield, comp.ships, right_border_offset, top_offset, True)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -110,8 +113,15 @@ if __name__ == '__main__':
                 mousepos = pygame.mouse.get_pos()
                 highlight_coord = pygame_board.get_highlighted_cell_coordinate(mousepos)
                 mouse_last_pos = highlight_coord
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    pass
+            if event.type == pygame.MOUSEBUTTONDOWN and mouse_last_pos:
+                print(tuple(mouse_last_pos[0]))
+                for row in player.board.battlefield:
+                    if tuple(mouse_last_pos[0]) in row:
+                        if row[tuple(mouse_last_pos[0])] == 1:
+                            player.attack(tuple(mouse_last_pos[0]), comp.ships, comp.board.field)
+                        else:
+                            print('You already hit that cell')
+
 
         if mouse_last_pos:  # Highlight board cell
             pygame_board.highlight_cell(mouse_last_pos)

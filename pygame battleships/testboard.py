@@ -70,6 +70,7 @@ def highlight_cell(coord):
     # elif coord[1] == 1:
     pygame.draw.rect(screen, GREEN, [(CELL * x) + right_border_offset, (CELL * y) + top_offset, CELL, CELL],
                          border_radius=3)
+    print(coord)
 
 
 # Main game loop
