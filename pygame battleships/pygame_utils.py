@@ -60,6 +60,14 @@ def get_ship_index(coordinate, ships):
                 return False
 
 
+def highlight_cell(surface, coord, border_offset=right_border_offset, top_offset=top_offset):
+    """draws a rectangle on given coordinates"""
+    x, y = coord
+    pygame.draw.rect(surface, HIGHLIGHT_COLOR,
+                     [(CELL * x) + border_offset, (CELL * y) + top_offset, CELL, CELL],
+                     width=2, border_radius=3)
+
+
 if __name__ == '__main__':
     pygame.init()
     clock = pygame.time.Clock()
@@ -69,10 +77,13 @@ if __name__ == '__main__':
 
     arial_font = pygame.font.SysFont('arial', CELL)
     number_font = arial_font.render('1', False, BLACK, GREY)
-
+    mouse_last_pos = []
     running = True
     while running:
         screen.fill(WHITE)
+
+        draw_basic_board(screen)
+        draw_board_numbers(screen, arial_font)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -81,8 +92,10 @@ if __name__ == '__main__':
                 mousepos = pygame.mouse.get_pos()
                 print(get_highlighted_cell_coordinate(mousepos))
 
-        draw_basic_board(screen)
-        draw_board_numbers(screen, arial_font)
+                mouse_last_pos = get_highlighted_cell_coordinate(mousepos)
+
+        if mouse_last_pos:
+            highlight_cell(screen, mouse_last_pos)
         pygame.display.flip()
         clock.tick(30)
 
