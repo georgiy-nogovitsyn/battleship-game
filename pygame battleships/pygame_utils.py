@@ -50,6 +50,15 @@ def get_highlighted_cell_coordinate(mousepos, offset=right_border_offset, top_of
             pos_x, pos_y = int((x - offset) / CELL), int((y - top_offset) / CELL)
             return pos_x, pos_y
 
+def get_ship_index(coordinate, ships):
+    for index, ship in enumerate(ships):
+        if coordinate in ship.coordinates:
+            if ship.coordinates[coordinate]:
+                print(index)
+                return str(index)
+            else:
+                return False
+
 
 if __name__ == '__main__':
     pygame.init()
