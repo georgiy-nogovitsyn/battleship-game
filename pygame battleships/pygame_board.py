@@ -94,7 +94,7 @@ if __name__ == '__main__':
 
     running = True
     move = True
-    winner = 'Bye!'
+    final_message = 'Bye!'
     while running:
         move = True
         while move:
@@ -121,7 +121,7 @@ if __name__ == '__main__':
                                 break
                             else:
                                 running = False
-                                winner = 'Player'
+                                final_message = 'Player wins!'
                     elif pygame_utils.get_ship_index(mouse_last_pos, comp.ships) is False:
                         print('You already hit that ship')
                     elif pygame_utils.get_ship_index(mouse_last_pos, comp.ships) is None:
@@ -151,8 +151,8 @@ if __name__ == '__main__':
                 #         else:
                 #             print('You already hit that cell')
 
-                if mouse_last_pos:  # Highlight board cell
-                    pygame_board.highlight_cell(mouse_last_pos)
+            if mouse_last_pos:  # Highlight board cell
+                pygame_board.highlight_cell(mouse_last_pos)
 
             pygame.display.flip()
             clock.tick(30)
@@ -166,10 +166,10 @@ if __name__ == '__main__':
                         break
                     else:
                         running = False
-                        winner = 'Comp'
+                        final_message = 'Comp wins!'
             else:
                 move = False
 
-    print(f'{winner}')
+    print(f'{final_message}')
 
     pygame.quit()
