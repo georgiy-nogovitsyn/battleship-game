@@ -1,5 +1,5 @@
 import pygame_board
-import ship_class
+import pygame_ship_class
 from random import randint
 
 
@@ -7,7 +7,7 @@ class Player:
     def __init__(self, is_computer=True):
         self.is_computer = is_computer
         self.name = 'Player' if not is_computer else 'Computer'
-        self.ships = [ship_class.Ship(decks) for decks in (4, 3, 3, 2, 2, 2, 1, 1, 1, 1)]
+        self.ships = [pygame_ship_class.Ship(decks) for decks in (4, 3, 3, 2, 2, 2, 1, 1, 1, 1)]
         self.board = pygame_board.Board()
         self.ship_placement()
 
@@ -28,6 +28,7 @@ class Player:
                 if self.ship_placement_coordinates_validation(coordinates):
                     ship.coordinates = dict.fromkeys(coordinates, 1)
                     ship.orientation = orientation
+                    ship.status
                     break
 
     def ship_placement_coordinates_validation(self, coordinates):
@@ -45,13 +46,10 @@ class Player:
             if coordinate in ship.coordinates:
                 ship.coordinates[coordinate] = 0
                 self.board.shadows_around_damaged_ship_cell(coordinate, opponent.board.field)
-                return True
-            else:
-                self.board.battlefield[coordinate] = 0
-                opponent.board.field[coordinate] = 0
-                return False
-
-
+        else:
+            self.board.battlefield[coordinate] = 0
+            opponent.board.field[coordinate] = 0
+            return False
 
     # def attack(self, coordinates, opponent_ships, opponent_field):
     #     flag = False, False

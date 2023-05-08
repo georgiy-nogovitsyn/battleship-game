@@ -1,8 +1,9 @@
-import pygame_board, pygame_computer, pygame_player, pygame_utils
+import pygame_player
 import pygame
 from pygame_config import *
 
-from random import randint
+from random import randint, choice
+
 pygame.init()
 clock = pygame.time.Clock()
 
@@ -39,16 +40,28 @@ class Game:
     def ships_status_update(self, ships):
         """ ships status update after hit """
         for ship in ships:
-            ship.status_update()
             if ship.status is True:
                 return False
-            else:
-                return True
+
+        return True
     def computer_choice(self, attacker, opponent):
         while True:
             choice = randint(0, 9), randint(0, 9)
             if self.chosen_coordinate_validation(choice, attacker, opponent):
                 return choice
+
+    def searching_for_destroy(self, attacker, opponent):
+        coordinates_for_attack = []
+        for ship in opponent.ships:
+            if ship.status is True and 0 in ship.coordinates.values():
+                for coordinate in ship.coordinates:
+                    if ship.coordinates[coordinate] == 0:
+                        for x in range(coordinate[0] - 1, coordinate[0] + 2):
+                            for y in range(coordinate[1] - 1, coordinate[1] + 2):
+                                if (x, y) in attacker.board.battlefield and attacker.board.battlefield[(x, y)] == 1:
+                                    coordinates_for_attack.append((x, y))
+        return coordinates_for_attack
+
     def start(self):
         if __name__ == '__main__':
             mouse_last_pos = []
@@ -73,15 +86,16 @@ class Game:
                         if event.type == pygame.MOUSEBUTTONDOWN and mouse_last_pos:
                             if self.chosen_coordinate_validation(mouse_last_pos, self.player, self.comp) is True:
                                 if self.player.attack(mouse_last_pos, self.comp) is True:
-                                    if self.ships_status_update(self.comp.ships) is False:
+                                    print(f'You hit the ship on {mouse_last_pos}')
+                                    if self.ships_status_update(self.comp.ships) is True:
                                         winner = 'Player'
                                         running = False
                                         break
                                 else:
-                                    print('You missed')
+                                    print(f'You missed on {mouse_last_pos}')
                                     move = False
                             else:
-                                print('You already hit that cell')
+                                print(f'You already hit that {mouse_last_pos} cell')
 
                     if mouse_last_pos:  # Highlight board cell
                         self.player.board.highlight_cell(mouse_last_pos, screen)
@@ -91,12 +105,17 @@ class Game:
 
                 move = True
                 while move and running:
-                    if self.comp.attack(self.computer_choice(self.comp, self.player), self.player):
-                        if self.ships_status_update(self.player.ships) is False:
+                    if coordinates_for_attack := self.searching_for_destroy(self.comp, self.player):
+                        computer_choice_coordinates = choice(coordinates_for_attack)
+                    else:
+                        computer_choice_coordinates = self.computer_choice(self.comp, self.player)
+                    if self.comp.attack(computer_choice_coordinates, self.player):
+                        print(f'Computer hit the ship on {computer_choice_coordinates}')
+                        if self.ships_status_update(self.player.ships) is True:
                             winner = 'Computer'
                             running = False
                     else:
-                        print('Computer missed')
+                        print(f'Computer missed on {computer_choice_coordinates}')
                         move = False
 
             print(f'{winner}')
