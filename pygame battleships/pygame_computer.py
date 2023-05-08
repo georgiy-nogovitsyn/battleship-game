@@ -1,12 +1,12 @@
 
-import board
+import pygame_board
 import ship_class
 from random import randint, choice as ch
 
 
 class Comp:
     def __init__(self):
-        self.board = board.Board()
+        self.board = pygame_board.Board()
         self.ships = [ship_class.Ship(decks) for decks in (4, 3, 3, 2, 2, 2, 1, 1, 1, 1)]
         self.ship_placement()
 
@@ -63,7 +63,7 @@ class Comp:
                                     if local_flag is False:
                                         break
                                     if 9 >= x >= 0 and 9 >= y >= 0 and (x, y) != coordinate:
-                                        if ship.coordinates.get((x, y)) != 0 and self.board.battlefield[x][x, y] != 0:
+                                        if ship.coordinates.get((x, y)) != 0 and self.board.battlefield[x, y] != 0:
                                             coordinates_for_choice.append((x, y))
                     else:
                         choice = ch(coordinates_for_choice)
