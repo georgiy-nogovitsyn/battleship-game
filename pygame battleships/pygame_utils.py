@@ -67,6 +67,24 @@ def highlight_cell(surface, coord, border_offset=right_border_offset, top_offset
                      [(CELL * x) + border_offset, (CELL * y) + top_offset, CELL, CELL],
                      width=2, border_radius=3)
 
+def choose_color(status):
+    if status == 0:
+        cell = DAMAGED_SHIP_CELL
+    else:
+        cell = SHIP_CELL
+    return cell
+
+def draw_ships(screen, ships, offset_x, offset_y):
+    for ship in ships:
+        cell = ship[0]
+        x,y = ship[0]
+        status = ship[cell]
+        cell_color = choose_color(status)
+
+        pygame.draw.rect(screen, cell_color, [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL])
+        pygame.draw.rect(screen, (0, 0, 0), [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL], width=2,
+                         border_radius=3)
+
 
 if __name__ == '__main__':
     pygame.init()
@@ -77,13 +95,18 @@ if __name__ == '__main__':
 
     arial_font = pygame.font.SysFont('arial', CELL)
     number_font = arial_font.render('1', False, BLACK, GREY)
+
     mouse_last_pos = []
+
+    ships = [{(1,1):1, (1,2):1}, {(1,3):1}, {(8,8):1}]
+
     running = True
     while running:
         screen.fill(WHITE)
 
         draw_basic_board(screen)
         draw_board_numbers(screen, arial_font)
+        draw_ships(screen,ships,right_border_offset,top_offset)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
