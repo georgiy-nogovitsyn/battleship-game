@@ -1,27 +1,6 @@
 from pygame_config import *
 import pygame
-# import pygame_player, pygame_computer, pygame_utils
 pygame.init()
-# clock = pygame.time.Clock()
-#
-# # Set up the game window
-# WIDTH = 800
-# HEIGHT = 500
-# screen = pygame.display.set_mode((WIDTH, HEIGHT))
-# pygame.display.set_caption("Battleship Game Board")
-#
-# # Cell size
-# CELL = 30
-#
-# # Offsets for correct rectangle drawing
-# left_border_offset = CELL
-# right_border_offset = WIDTH - CELL * 11
-# top_offset = CELL
-#
-
-# player = pygame_player.Player()
-# comp = pygame_computer.Comp()
-# player.ship_placement()
 
 class Board:
     def __init__(self):
@@ -78,182 +57,20 @@ class Board:
         pygame.draw.rect(screen, HIGHLIGHT_COLOR,
                          [(CELL * x) + right_border_offset, (CELL * y) + top_offset, CELL, CELL],
                          width=2, border_radius=3)
-
-
-# if __name__ == '__main__':
-#     pygame_board = Board()
-#     mouse_last_pos = []
-#
-#     running = True
-#     move = True
-#     winner = 'Bye!'
-#     while running:
-#         move = True
-#         while move:
-#             screen.fill((255, 255, 255))
-#             pygame_board.draw_pygame_board(player.board.field, player.ships, left_border_offset, top_offset,
-#                                            False)
-#             pygame_board.draw_pygame_board(player.board.battlefield, comp.ships, right_border_offset,
-#                                            top_offset, True)
-#             for event in pygame.event.get():
-#                 if event.type == pygame.QUIT:
-#                     running = False
-#                 elif event.type == pygame.MOUSEMOTION:
-#                     mouse_pos = pygame.mouse.get_pos()
-#                     highlight_coord = pygame_board.get_highlighted_cell_coordinate(mouse_pos)
-#                     if highlight_coord:
-#                         mouse_last_pos = highlight_coord
-#                 if event.type == pygame.MOUSEBUTTONDOWN and mouse_last_pos:
-#                     if pygame_utils.get_ship_index(mouse_last_pos, comp.ships):
-#                         player.attack(mouse_last_pos, comp.ships, comp.board.field)
-#                         for ship in comp.ships:
-#                             ship.status_update()
-#                             if ship.status is True:
-#                                 running = True
-#                                 break
-#                             else:
-#                                 running = False
-#                                 winner = 'Player'
-#                     elif pygame_utils.get_ship_index(mouse_last_pos, comp.ships) is False:
-#                         print('You already hit that ship')
-#                     elif pygame_utils.get_ship_index(mouse_last_pos, comp.ships) is None:
-#                         if player.board.battlefield[mouse_last_pos[0]][mouse_last_pos] == 1:
-#                             player.board.battlefield[mouse_last_pos[0]][mouse_last_pos] = 0
-#                             comp.board.field[mouse_last_pos[0]][mouse_last_pos] = 0
-#                             print('You missed')
-#                             move = False
-#                         else:
-#                             print('You already hit that cell')
-#                 # ship_hit = True
-#                 # while ship_hit:
-#                 #     for row in player.board.battlefield:
-#                 #         if mouse_last_pos in row and row[mouse_last_pos] == 1:
-#                 #             if player.attack(mouse_last_pos, comp.ships, comp.board.field) is True:
-#                 #                 ship_hit = True
-#                 #                 for ship in comp.ships:
-#                 #                     ship.status_update()
-#                 #                     if ship.status is True:
-#                 #                         running = True
-#                 #                         break
-#                 #                     else:
-#                 #                         running = False
-#                 #                         winner = 'Player'
-#                 #             else:
-#                 #                 ship_hit = False
-#                 #         else:
-#                 #             print('You already hit that cell')
-#
-#             if mouse_last_pos:  # Highlight board cell
-#                 pygame_board.highlight_cell(mouse_last_pos)
-#
-#             pygame.display.flip()
-#             clock.tick(30)
-#         move = True
-#         while move:
-#             if comp.attack(player.ships, player.board.field) is True:
-#                 for ship in player.ships:
-#                     ship.status_update()
-#                     if ship.status is True:
-#                         running = True
-#                         break
-#                     else:
-#                         running = False
-#                         winner = 'Comp'
-#             else:
-#                 move = False
-#
-#     print(f'{winner}')
-#
-#     pygame.quit()
-    def shadows_around_damaged_ship_cell(self, coordinate, opponent_field):
+    def shadows_around_damaged_ship(self, ship, attacked_coordinate, opponent):
         """ this method changes cells to damaged around damaged ship cell in attacker battlefield and attacked field """
-        for x in range(coordinate[0] - 1, coordinate[0] + 2, 2):
-            for y in range(coordinate[1] - 1, coordinate[1] + 2, 2):
-                if (x, y) in self.battlefield:
-                    self.battlefield[(x, y)] = 0
-                    opponent_field[(x, y)] = 0
-# if __name__ == '__main__':
-#     pygame_board = Board()
-#     mouse_last_pos = []
-#
-#     running = True
-#     move = True
-#     final_message = 'Bye!'
-#     while running:
-#         move = True
-#         while move:
-#             screen.fill((255, 255, 255))
-#             pygame_board.draw_pygame_board(player.board.field, player.ships, left_border_offset, top_offset,
-#                                            False)
-#             pygame_board.draw_pygame_board(player.board.battlefield, comp.ships, right_border_offset,
-#                                            top_offset, True)
-#             for event in pygame.event.get():
-#                 if event.type == pygame.QUIT:
-#                     running = False
-#                 elif event.type == pygame.MOUSEMOTION:
-#                     mouse_pos = pygame.mouse.get_pos()
-#                     highlight_coord = pygame_board.get_highlighted_cell_coordinate(mouse_pos)
-#                     if highlight_coord:
-#                         mouse_last_pos = highlight_coord
-#                 if event.type == pygame.MOUSEBUTTONDOWN and mouse_last_pos:
-#                     if pygame_utils.get_ship_index(mouse_last_pos, comp.ships):
-#                         player.attack(mouse_last_pos, comp.ships, comp.board.field)
-#                         for ship in comp.ships:
-#                             ship.status_update()
-#                             if ship.status is True:
-#                                 running = True
-#                                 break
-#                             else:
-#                                 running = False
-#                                 final_message = 'Player wins!'
-#                     elif pygame_utils.get_ship_index(mouse_last_pos, comp.ships) is False:
-#                         print('You already hit that ship')
-#                     elif pygame_utils.get_ship_index(mouse_last_pos, comp.ships) is None:
-#                         if player.board.battlefield[mouse_last_pos[0]][mouse_last_pos] == 1:
-#                             player.board.battlefield[mouse_last_pos[0]][mouse_last_pos] = 0
-#                             comp.board.field[mouse_last_pos[0]][mouse_last_pos] = 0
-#                             print('You missed')
-#                             move = False
-#                         else:
-#                             print('You already hit that cell')
-#                 # ship_hit = True
-#                 # while ship_hit:
-#                 #     for row in player.board.battlefield:
-#                 #         if mouse_last_pos in row and row[mouse_last_pos] == 1:
-#                 #             if player.attack(mouse_last_pos, comp.ships, comp.board.field) is True:
-#                 #                 ship_hit = True
-#                 #                 for ship in comp.ships:
-#                 #                     ship.status_update()
-#                 #                     if ship.status is True:
-#                 #                         running = True
-#                 #                         break
-#                 #                     else:
-#                 #                         running = False
-#                 #                         winner = 'Player'
-#                 #             else:
-#                 #                 ship_hit = False
-#                 #         else:
-#                 #             print('You already hit that cell')
-#
-#             if mouse_last_pos:  # Highlight board cell
-#                 pygame_board.highlight_cell(mouse_last_pos)
-#
-#             pygame.display.flip()
-#             clock.tick(30)
-#         move = True
-#         while move:
-#             if comp.attack(player.ships, player.board.field) is True:
-#                 for ship in player.ships:
-#                     ship.status_update()
-#                     if ship.status is True:
-#                         running = True
-#                         break
-#                     else:
-#                         running = False
-#                         final_message = 'Comp wins!'
-#             else:
-#                 move = False
-#
-#     print(f'{final_message}')
-#
-#     pygame.quit()
+        ship.status_update()
+        if ship.status is False:
+            for coordinate in sorted(ship.coordinates.keys()):
+                for x in range(coordinate[0] - 1, coordinate[0] + 2):
+                    for y in range(coordinate[1] - 1, coordinate[1] + 2):
+                        if (x, y) in self.battlefield and (x, y) not in ship.coordinates:
+                            self.battlefield[(x, y)] = 0
+                            opponent.board.field[(x, y)] = 0
+        else:
+            for x in range(attacked_coordinate[0] - 1, attacked_coordinate[0] + 2, 2):
+                for y in range(attacked_coordinate[1] - 1, attacked_coordinate[1] + 2, 2):
+                    if (x, y) in self.battlefield:
+                        self.battlefield[(x, y)] = 0
+                        opponent.board.field[(x, y)] = 0
+

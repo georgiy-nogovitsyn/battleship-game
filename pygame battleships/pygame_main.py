@@ -40,10 +40,11 @@ class Game:
     def ships_status_update(self, ships):
         """ ships status update after hit """
         for ship in ships:
+            ship.status_update()
             if ship.status is True:
-                return False
+                return True
+        return False
 
-        return True
     def computer_choice(self, attacker, opponent):
         while True:
             choice = randint(0, 9), randint(0, 9)
@@ -87,9 +88,10 @@ class Game:
                             if self.chosen_coordinate_validation(mouse_last_pos, self.player, self.comp) is True:
                                 if self.player.attack(mouse_last_pos, self.comp) is True:
                                     print(f'You hit the ship on {mouse_last_pos}')
-                                    if self.ships_status_update(self.comp.ships) is True:
+                                    if self.ships_status_update(self.comp.ships) is False:
                                         winner = 'Player'
                                         running = False
+                                        move = False
                                         break
                                 else:
                                     print(f'You missed on {mouse_last_pos}')
@@ -111,9 +113,10 @@ class Game:
                         computer_choice_coordinates = self.computer_choice(self.comp, self.player)
                     if self.comp.attack(computer_choice_coordinates, self.player):
                         print(f'Computer hit the ship on {computer_choice_coordinates}')
-                        if self.ships_status_update(self.player.ships) is True:
+                        if self.ships_status_update(self.player.ships) is False:
                             winner = 'Computer'
                             running = False
+                            break
                     else:
                         print(f'Computer missed on {computer_choice_coordinates}')
                         move = False
