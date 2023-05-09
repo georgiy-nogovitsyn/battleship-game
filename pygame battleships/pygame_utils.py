@@ -1,5 +1,6 @@
 import pygame
 from pygame_config import *
+import pygame_player
 
 
 def draw_board_numbers(screen, font, color=BLACK, num_offset=5):
@@ -20,14 +21,16 @@ def draw_basic_board(screen):
     # Draw left board
     for x in range(10):
         for y in range(10):
-            pygame.draw.rect(screen, GREY, [(CELL * x) + left_border_offset, (CELL * y) + top_offset, CELL, CELL])
+            pygame.draw.rect(screen, BACKGROUND_COLOR,
+                             [(CELL * x) + left_border_offset, (CELL * y) + top_offset, CELL, CELL])
             pygame.draw.rect(screen, BLACK, [(CELL * x) + left_border_offset, (CELL * y) + top_offset, CELL, CELL],
                              width=1,
                              border_radius=2)
     # Draw right board
     for x in range(10):
         for y in range(10):
-            pygame.draw.rect(screen, GREY, [(CELL * x) + right_border_offset, (CELL * y) + top_offset, CELL, CELL])
+            pygame.draw.rect(screen, BACKGROUND_COLOR,
+                             [(CELL * x) + right_border_offset, (CELL * y) + top_offset, CELL, CELL])
             pygame.draw.rect(screen, BLACK, [(CELL * x) + right_border_offset, (CELL * y) + top_offset, CELL, CELL],
                              width=1,
                              border_radius=2)
@@ -50,6 +53,7 @@ def get_highlighted_cell_coordinate(mousepos, offset=right_border_offset, top_of
             pos_x, pos_y = int((x - offset) / CELL), int((y - top_offset) / CELL)
             return pos_x, pos_y
 
+
 def get_ship_index(coordinate, ships):
     for index, ship in enumerate(ships):
         if coordinate in ship.coordinates:
@@ -67,23 +71,40 @@ def highlight_cell(surface, coord, border_offset=right_border_offset, top_offset
                      [(CELL * x) + border_offset, (CELL * y) + top_offset, CELL, CELL],
                      width=2, border_radius=3)
 
-def choose_color(status):
+
+def choose_ship_color(status):
     if status == 0:
         cell = DAMAGED_SHIP_CELL
     else:
         cell = SHIP_CELL
     return cell
 
-def draw_ships(screen, ships, offset_x, offset_y):
-    for ship in ships:
-        cell = ship[0]
-        x,y = ship[0]
-        status = ship[cell]
-        cell_color = choose_color(status)
 
-        pygame.draw.rect(screen, cell_color, [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL])
-        pygame.draw.rect(screen, (0, 0, 0), [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL], width=2,
-                         border_radius=3)
+def draw_ships(screen, ships, offset_x=left_border_offset, offset_y=top_offset, hidden = False):
+    """Draws ships on board. If hidden = True draws only damaged cells on the right board"""
+    if hidden:
+        offset_x = right_border_offset
+    for ship_cells in ships:
+        coordinates = ship_cells.coordinates
+        for cell in coordinates:
+            x, y = cell
+            status = coordinates[cell]
+            cell_color = choose_ship_color(status)
+
+            if not hidden or cell_color == 1:
+                pygame.draw.rect(screen, cell_color, [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL])
+                pygame.draw.rect(screen, (0, 0, 0), [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL], width=2,
+                                 border_radius=3)
+
+def draw_water_shots(screen, field, offset_x = left_border_offset, offset_y = top_offset, cell_color = DAMAGED_CELL):
+    for cell in field:
+        x, y = cell
+        status = field[cell]
+        if status == 0: # Draw only for damaged field
+            pygame.draw.rect(screen, cell_color, [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL],
+                             border_radius=4)
+            pygame.draw.rect(screen, (0, 0, 0), [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL], width=2,
+                             border_radius=3)
 
 
 if __name__ == '__main__':
@@ -98,7 +119,8 @@ if __name__ == '__main__':
 
     mouse_last_pos = []
 
-    ships = [{(1,1):1, (1,2):1}, {(1,3):1}, {(8,8):1}]
+    player = pygame_player.Player(False)
+    comp = pygame_player.Player()
 
     running = True
     while running:
@@ -106,7 +128,8 @@ if __name__ == '__main__':
 
         draw_basic_board(screen)
         draw_board_numbers(screen, arial_font)
-        draw_ships(screen,ships,right_border_offset,top_offset)
+        draw_ships(screen, player.ships)
+        draw_ships(screen,comp.ships, hidden=True)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
