@@ -5,6 +5,7 @@ from pygame_utils import highlight_cell, get_highlighted_cell_coordinate, draw_b
 from pygame_config import *
 from pygame_main import Game
 from random import choice
+from time import sleep
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -37,11 +38,11 @@ player_2_turn = False
 final_message = 'Bye!'
 running = True
 while running:
-    player_1_turn = True
-    while player_1_turn:
-        screen.fill(WHITE)
+    screen.fill(WHITE)
 
-        draw_pygame_elements()
+    draw_pygame_elements()
+    if player_1_turn:
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -65,18 +66,15 @@ while running:
                             break
                     else:
                         print(f'You missed on {mouse_last_pos}')
+                        player_2_turn = True
                         player_1_turn = False
                 else:
                     print(f'You already hit that {mouse_last_pos} cell')
 
 
-        if mouse_last_pos:
-            highlight_cell(screen, mouse_last_pos)
 
-        pygame.display.flip()
-        clock.tick(30)
-    player_2_turn = True
-    while player_2_turn:
+
+    if player_2_turn:
         if coordinates_for_attack := events.searching_for_destroy(comp, player):
             computer_choice_coordinates = choice(coordinates_for_attack)
         else:
@@ -89,7 +87,16 @@ while running:
                 break
         else:
             print(f'Computer missed on {computer_choice_coordinates}')
+
+            player_1_turn = True
             player_2_turn = False
+        sleep(0.5)
+
+    if mouse_last_pos:
+        highlight_cell(screen, mouse_last_pos)
+
+    pygame.display.flip()
+    clock.tick(30)
 
 print(final_message)
 pygame.quit()
