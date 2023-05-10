@@ -18,9 +18,9 @@ CELL = 30
 
 # Settings for the game window
 WIDTH = CELL * 24  # 800
-HEIGHT = CELL * 12  # 500
+HEIGHT = CELL * 13  # 500
 
 # Offsets for correct rectangle drawing
 left_border_offset = CELL
 right_border_offset = WIDTH - CELL * 11
-top_offset = CELL
+top_offset = CELL * 2

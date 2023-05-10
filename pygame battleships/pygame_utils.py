@@ -3,14 +3,22 @@ from pygame_config import *
 import pygame_player
 
 
-def draw_board_numbers(screen, font, color=BLACK, num_offset=5, offset = left_border_offset):
-    # Top row of numbers for left board
+def draw_pygame_message(screen, font, message, top_offset=0, color=BLACK):
+    """Draws given message on the top center of screen"""
+    center = WIDTH / 2
+    pygame_font = font.render(message, True, color)
+    font_width = pygame_font.get_rect().width
+    screen.blit(pygame_font, (center - (font_width / 2), top_offset))
+
+def draw_board_numbers(screen, font, color=BLACK, num_offset=5, offset=left_border_offset):
+    """Draws row and column of numbers on the screen for better game experience. By default draws for left board"""
+    # Row of numbers
     for x in range(10):
         num = str(x)
         number_font = font.render(num, True, color)
         screen.blit(number_font, (offset + num_offset + (CELL * x), top_offset - CELL))
 
-    # Column of numbers for left board
+    # Column of numbers
     for x in range(10):
         num = str(x)
         number_font = font.render(num, True, color)
@@ -80,7 +88,7 @@ def choose_ship_color(status):
     return cell
 
 
-def draw_ships(screen, ships, offset_x=left_border_offset, offset_y=top_offset, hidden = False):
+def draw_ships(screen, ships, offset_x=left_border_offset, offset_y=top_offset, hidden=False):
     """Draws ships on board. If hidden = True draws only damaged cells on the right board"""
     if hidden:
         offset_x = right_border_offset
@@ -96,11 +104,12 @@ def draw_ships(screen, ships, offset_x=left_border_offset, offset_y=top_offset, 
                 pygame.draw.rect(screen, (0, 0, 0), [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL], width=2,
                                  border_radius=3)
 
-def draw_water_hits(screen, field, offset_x = left_border_offset, offset_y = top_offset, cell_color = WATER_HIT):
+
+def draw_water_hits(screen, field, offset_x=left_border_offset, offset_y=top_offset, cell_color=WATER_HIT):
     for cell in field:
         x, y = cell
         status = field[cell]
-        if status == 0: # Draw only for damaged field
+        if status == 0:  # Draw only for damaged field
             pygame.draw.rect(screen, cell_color, [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL],
                              border_radius=4)
             pygame.draw.rect(screen, (0, 0, 0), [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL], width=2,
@@ -129,7 +138,7 @@ if __name__ == '__main__':
         draw_basic_board(screen)
         draw_board_numbers(screen, arial_font)
         draw_ships(screen, player.ships)
-        draw_ships(screen,comp.ships, hidden=True)
+        draw_ships(screen, comp.ships, hidden=True)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

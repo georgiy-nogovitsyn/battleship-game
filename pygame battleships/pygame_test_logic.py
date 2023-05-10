@@ -1,7 +1,7 @@
 import pygame
 from pygame_player import Player
 from pygame_utils import highlight_cell, get_highlighted_cell_coordinate, draw_basic_board, draw_ships, draw_water_hits, \
-    draw_board_numbers
+    draw_board_numbers, draw_pygame_message
 from pygame_config import *
 from pygame_main import Game
 from random import choice
@@ -26,6 +26,7 @@ def draw_pygame_elements():
     draw_ships(screen, comp.ships, hidden=True)
     draw_board_numbers(screen, arial_font)
     draw_board_numbers(screen, arial_font, offset=right_border_offset)
+    draw_pygame_message(screen,arial_font,'HeLLo!!1!1')
 
 
 # Creating class objects
