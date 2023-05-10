@@ -3,18 +3,18 @@ from pygame_config import *
 import pygame_player
 
 
-def draw_board_numbers(screen, font, color=BLACK, num_offset=5):
+def draw_board_numbers(screen, font, color=BLACK, num_offset=5, offset = left_border_offset):
     # Top row of numbers for left board
     for x in range(10):
         num = str(x)
         number_font = font.render(num, True, color)
-        screen.blit(number_font, (left_border_offset + num_offset + (CELL * x), top_offset - CELL))
+        screen.blit(number_font, (offset + num_offset + (CELL * x), top_offset - CELL))
 
     # Column of numbers for left board
     for x in range(10):
         num = str(x)
         number_font = font.render(num, True, color)
-        screen.blit(number_font, (left_border_offset - CELL + num_offset, top_offset - 1 + (CELL * x)))
+        screen.blit(number_font, (offset - CELL + num_offset, top_offset - 1 + (CELL * x)))
 
 
 def draw_basic_board(screen):

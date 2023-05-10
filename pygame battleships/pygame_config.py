@@ -17,7 +17,7 @@ WHITE = (255, 255, 255)
 CELL = 30
 
 # Settings for the game window
-WIDTH = CELL * 23  # 800
+WIDTH = CELL * 24  # 800
 HEIGHT = CELL * 12  # 500
 
 # Offsets for correct rectangle drawing

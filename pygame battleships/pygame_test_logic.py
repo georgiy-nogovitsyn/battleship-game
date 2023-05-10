@@ -5,7 +5,7 @@ from pygame_utils import highlight_cell, get_highlighted_cell_coordinate, draw_b
 from pygame_config import *
 from pygame_main import Game
 from random import choice
-from time import sleep
+from time import time
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -24,6 +24,7 @@ def draw_pygame_elements():
     draw_ships(screen, player.ships)
     draw_ships(screen, comp.ships, hidden=True)
     draw_board_numbers(screen, arial_font)
+    draw_board_numbers(screen,arial_font,offset=right_border_offset)
 
 
 events = Game()
@@ -35,18 +36,32 @@ mouse_last_pos = []
 player_1_turn = True
 player_2_turn = False
 
+#initialize millis counters
+millis = time()*1000.0
+saved_millis = millis
+
 final_message = 'Bye!'
+
 running = True
 while running:
+
     screen.fill(WHITE)
 
     draw_pygame_elements()
+
+    if mouse_last_pos:
+        highlight_cell(screen, mouse_last_pos)
+
+    pygame.display.flip()
+    clock.tick(30)
+
     if player_1_turn:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
                 player_1_turn = False
+
 
             elif event.type == pygame.MOUSEMOTION:
                 mouse_pos = pygame.mouse.get_pos()
@@ -56,7 +71,6 @@ while running:
 
             if event.type == pygame.MOUSEBUTTONDOWN and mouse_last_pos:
                 # Game events
-
                 if events.chosen_coordinate_validation(mouse_last_pos, player, comp) is True:
                     if player.attack(mouse_last_pos, comp) is True:
                         print(f'You hit the ship on {mouse_last_pos}')
@@ -71,10 +85,9 @@ while running:
                 else:
                     print(f'You already hit that {mouse_last_pos} cell')
 
+    millis = time() * 1000.0  # update millis
 
-
-
-    if player_2_turn:
+    if player_2_turn and millis - saved_millis >= 0:
         if coordinates_for_attack := events.searching_for_destroy(comp, player):
             computer_choice_coordinates = choice(coordinates_for_attack)
         else:
@@ -90,13 +103,14 @@ while running:
 
             player_1_turn = True
             player_2_turn = False
-        sleep(0.5)
 
-    if mouse_last_pos:
-        highlight_cell(screen, mouse_last_pos)
+        # saving millis to delay comp move
+        saved_millis = time()*1000.0 + 500
+    print(millis - saved_millis)
 
-    pygame.display.flip()
-    clock.tick(30)
+
+
+
 
 print(final_message)
 pygame.quit()
