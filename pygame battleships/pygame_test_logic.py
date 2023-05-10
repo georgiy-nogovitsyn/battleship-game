@@ -44,8 +44,9 @@ millis = time() * 1000.0
 saved_millis = millis
 
 final_message = 'Bye!'
-
 running = True
+for x in comp.ships:
+    print(x.coordinates)
 while running:
     screen.fill(WHITE)
     draw_pygame_elements()

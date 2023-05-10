@@ -5,8 +5,8 @@ pygame.init()
 class Board:
     def __init__(self):
         self.size = 10
-        self.field = {(y, x): 1 for x in range(self.size) for y in range(self.size)}
-        self.battlefield = {(y, x): 1 for x in range(self.size) for y in range(self.size)}
+        self.field = {(x, y): 1 for y in range(self.size) for x in range(self.size)}
+        self.battlefield = {(x, y): 1 for y in range(self.size) for x in range(self.size)}
 
     def draw_pygame_board(self, field, ships, offset_x, offset_y, is_hidden, screen):
         for cell in field:
