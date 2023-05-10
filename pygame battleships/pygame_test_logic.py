@@ -1,5 +1,5 @@
 import pygame
-import pygame_player
+from pygame_player import Player
 from pygame_utils import highlight_cell, get_highlighted_cell_coordinate, draw_basic_board, draw_ships, draw_water_hits, \
     draw_board_numbers
 from pygame_config import *
@@ -14,6 +14,7 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Battleship Game Board")
 
+# Set pygame font
 arial_font = pygame.font.SysFont('arial', CELL)
 
 
@@ -24,51 +25,49 @@ def draw_pygame_elements():
     draw_ships(screen, player.ships)
     draw_ships(screen, comp.ships, hidden=True)
     draw_board_numbers(screen, arial_font)
-    draw_board_numbers(screen,arial_font,offset=right_border_offset)
+    draw_board_numbers(screen, arial_font, offset=right_border_offset)
 
 
+# Creating class objects
 events = Game()
-player = pygame_player.Player(False)
-comp = pygame_player.Player()
+player = Player(False)
+comp = Player()
 
 mouse_last_pos = []
 
 player_1_turn = True
 player_2_turn = False
 
-#initialize millis counters
-millis = time()*1000.0
+# initialize millis counters
+millis = time() * 1000.0
 saved_millis = millis
 
 final_message = 'Bye!'
 
 running = True
 while running:
-
     screen.fill(WHITE)
-
     draw_pygame_elements()
 
     if mouse_last_pos:
         highlight_cell(screen, mouse_last_pos)
 
-    pygame.display.flip()
     clock.tick(30)
+    pygame.display.flip()
 
-    if player_1_turn:
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-                player_1_turn = False
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+            player_1_turn = False
 
 
-            elif event.type == pygame.MOUSEMOTION:
-                mouse_pos = pygame.mouse.get_pos()
-                highlight_coord = get_highlighted_cell_coordinate(mouse_pos)
-                if highlight_coord:
-                    mouse_last_pos = highlight_coord
+        elif event.type == pygame.MOUSEMOTION:
+            mouse_pos = pygame.mouse.get_pos()
+            highlight_coord = get_highlighted_cell_coordinate(mouse_pos)
+            if highlight_coord:
+                mouse_last_pos = highlight_coord
 
+        if player_1_turn:
             if event.type == pygame.MOUSEBUTTONDOWN and mouse_last_pos:
                 # Game events
                 if events.chosen_coordinate_validation(mouse_last_pos, player, comp) is True:
@@ -105,12 +104,7 @@ while running:
             player_2_turn = False
 
         # saving millis to delay comp move
-        saved_millis = time()*1000.0 + 500
-    print(millis - saved_millis)
-
-
-
-
+        saved_millis = time() * 1000.0 + 500
 
 print(final_message)
 pygame.quit()
