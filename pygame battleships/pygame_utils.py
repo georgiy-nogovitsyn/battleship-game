@@ -91,12 +91,12 @@ def draw_ships(screen, ships, offset_x=left_border_offset, offset_y=top_offset, 
             status = coordinates[cell]
             cell_color = choose_ship_color(status)
 
-            if not hidden or cell_color == 1:
+            if not hidden or cell_color == DAMAGED_SHIP_CELL or cell_color == WATER_HIT:
                 pygame.draw.rect(screen, cell_color, [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL])
                 pygame.draw.rect(screen, (0, 0, 0), [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL], width=2,
                                  border_radius=3)
 
-def draw_water_shots(screen, field, offset_x = left_border_offset, offset_y = top_offset, cell_color = DAMAGED_CELL):
+def draw_water_hits(screen, field, offset_x = left_border_offset, offset_y = top_offset, cell_color = WATER_HIT):
     for cell in field:
         x, y = cell
         status = field[cell]

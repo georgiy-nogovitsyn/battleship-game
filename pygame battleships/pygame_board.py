@@ -28,15 +28,15 @@ class Board:
         """status = cell status, if_ship = cell is ship or not"""
         if not is_ship:
             if status == 0:
-                cell = DAMAGED_CELL
+                cell = WATER_HIT
             else:
-                cell = CLEAN_CELL
+                cell = WATER_CELL
         else:
             if status == 0:
                 cell = DAMAGED_SHIP_CELL
             else:
                 if is_hidden:
-                    cell = CLEAN_CELL
+                    cell = WATER_CELL
                 else:
                     cell = SHIP_CELL
         return cell
