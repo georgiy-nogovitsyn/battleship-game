@@ -1,7 +1,19 @@
 import pygame
 from pygame_config import *
 import pygame_player
+from pygame_assets import ship_1,ship_2,ship_3,ship_4,ship_hit,water_hit
 
+class Sprites:
+    def __init__(self):
+
+        self.ship_1 = pygame.transform.scale(ship_1(CELL,CELL))
+
+    def draw_water_hit_sprites(self, screen, field, offset_x=left_border_offset, offset_y=top_offset, cell=water_hit):
+        for cell in field:
+            x, y = cell
+            status = field[cell]
+            if status == 0:  # Draw only for damaged field
+                pass
 
 def draw_pygame_message(screen, font, message, top_offset=0, color=BLACK):
     """Draws given message on the top center of screen"""
@@ -109,6 +121,7 @@ def draw_ships(screen, ships, offset_x=left_border_offset, offset_y=top_offset, 
                 pygame.draw.rect(screen, cell_color, [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL])
                 pygame.draw.rect(screen, (0, 0, 0), [(CELL * x) + offset_x, (CELL * y) + offset_y, CELL, CELL], width=2,
                                  border_radius=3)
+
 
 
 def draw_water_hits(screen, field, offset_x=left_border_offset, offset_y=top_offset, cell_color=WATER_HIT):
