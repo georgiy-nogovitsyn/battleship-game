@@ -8,18 +8,9 @@ pygame.init()
 clock = pygame.time.Clock()
 
 # Set up the game window
-WIDTH = WIDTH
-HEIGHT = HEIGHT
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Battleship Game Board")
 
-# Cell size
-CELL = 30
-
-# Offsets for correct rectangle drawing
-left_border_offset = CELL
-right_border_offset = WIDTH - CELL * 11
-top_offset = CELL
 
 class Game:
     def __init__(self, mode=0):
