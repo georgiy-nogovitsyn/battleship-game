@@ -5,10 +5,14 @@ import pygame_player
 
 def draw_pygame_message(screen, font, message, top_offset=0, color=BLACK):
     """Draws given message on the top center of screen"""
-    center = WIDTH / 2
     pygame_font = font.render(message, True, color)
-    font_width = pygame_font.get_rect().width
-    screen.blit(pygame_font, (center - (font_width / 2), top_offset))
+    text_rect = pygame_font.get_rect()
+    text_height = text_rect.height
+    text_width = text_rect.width
+    font_center = (WIDTH - text_width) / 2
+    text_rect.inflate_ip(text_width, text_height - 5)
+    screen.blit(pygame_font, (font_center, top_offset))
+
 
 def draw_board_numbers(screen, font, color=BLACK, num_offset=5, offset=left_border_offset):
     """Draws row and column of numbers on the screen for better game experience. By default draws for left board"""
@@ -16,12 +20,14 @@ def draw_board_numbers(screen, font, color=BLACK, num_offset=5, offset=left_bord
     for x in range(10):
         num = str(x)
         number_font = font.render(num, True, color)
+        num_rect = number_font.get_rect()
         screen.blit(number_font, (offset + num_offset + (CELL * x), top_offset - CELL))
 
     # Column of numbers
     for x in range(10):
         num = str(x)
         number_font = font.render(num, True, color)
+
         screen.blit(number_font, (offset - CELL + num_offset, top_offset - 1 + (CELL * x)))
 
 
@@ -125,7 +131,6 @@ if __name__ == '__main__':
 
     arial_font = pygame.font.SysFont('arial', CELL)
     number_font = arial_font.render('1', False, BLACK, GREY)
-
     mouse_last_pos = []
 
     player = pygame_player.Player(False)
