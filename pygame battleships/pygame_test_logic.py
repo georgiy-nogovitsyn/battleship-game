@@ -17,7 +17,7 @@ pygame.display.set_caption("Battleship Game Board")
 # Set pygame font
 arial_font = pygame.font.SysFont('arial', CELL)
 
-
+message = ''
 def draw_pygame_elements():
     draw_basic_board(screen)
     draw_water_hits(screen, player.board.field)
@@ -26,7 +26,7 @@ def draw_pygame_elements():
     draw_ships(screen, comp.ships, hidden=True)
     draw_board_numbers(screen, arial_font)
     draw_board_numbers(screen, arial_font, offset=right_border_offset)
-    draw_pygame_message(screen,arial_font,'HeLLo!!1!1')
+    draw_pygame_message(screen, arial_font, message)
 
 
 # Creating class objects
@@ -74,16 +74,19 @@ while running:
                 # Game events
                 if events.chosen_coordinate_validation(mouse_last_pos, player, comp) is True:
                     if player.attack(mouse_last_pos, comp) is True:
+                        message = f'You hit the ship in {mouse_last_pos}'
                         print(f'You hit the ship on {mouse_last_pos}')
                         if events.ships_status_update(comp.ships) is False:
                             final_message = 'Player win!'
                             running = False
                             break
                     else:
+                        message = f'You missed on {mouse_last_pos}'
                         print(f'You missed on {mouse_last_pos}')
                         player_2_turn = True
                         player_1_turn = False
                 else:
+                    message = f'You already hit that {mouse_last_pos} cell'
                     print(f'You already hit that {mouse_last_pos} cell')
 
     millis = time() * 1000.0  # update millis
@@ -94,19 +97,21 @@ while running:
         else:
             computer_choice_coordinates = events.computer_choice(comp, player)
         if comp.attack(computer_choice_coordinates, player):
+            message = f'Computer hit the ship on {computer_choice_coordinates}'
             print(f'Computer hit the ship on {computer_choice_coordinates}')
             if events.ships_status_update(player.ships) is False:
                 final_message = 'Computer Win!'
                 running = False
                 break
         else:
+            message = f'Computer missed on {computer_choice_coordinates}'
             print(f'Computer missed on {computer_choice_coordinates}')
 
             player_1_turn = True
             player_2_turn = False
 
         # saving millis to delay comp move
-        saved_millis = time() * 1000.0 + 500
+        saved_millis = time() * 1000.0 + 1500
 
 print(final_message)
 pygame.quit()
