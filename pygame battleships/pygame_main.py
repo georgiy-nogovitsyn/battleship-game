@@ -50,7 +50,7 @@ class Game:
                     if ship.coordinates[coordinate] == 0:
                         for x in range(coordinate[0] - 1, coordinate[0] + 2):
                             for y in range(coordinate[1] - 1, coordinate[1] + 2):
-                                if (x, y) in attacker.board.battlefield and attacker.board.battlefield[(x, y)] == 1:
+                                if attacker.board.battlefield.get((x, y)) == 1 and ship.coordinates.get((x, y)) == 1:
                                     coordinates_for_attack.append((x, y))
         return coordinates_for_attack
 

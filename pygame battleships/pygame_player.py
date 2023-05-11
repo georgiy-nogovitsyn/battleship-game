@@ -28,7 +28,6 @@ class Player:
                 if self.ship_placement_coordinates_validation(coordinates):
                     ship.coordinates = dict.fromkeys(coordinates, 1)
                     ship.orientation = orientation
-                    print(ship.status)
                     break
 
     def ship_placement_coordinates_validation(self, coordinates):
